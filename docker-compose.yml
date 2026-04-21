@@ -13,19 +13,39 @@ services:
     volumes:
       - minio_data:/data
     command: server /data --console-address ":9001"
-
   frontend:
     build:
-      context: ./frontend
-    container_name: react-app
+      context: ./apps/nuxt-app
+      dockerfile: dockerfile
+    container_name: nuxt
     ports:
-      - "5173:5173"
+      - "3000:3000"
     volumes:
-      - ./frontend:/app
+      - ./apps/nuxt-app:/app
       - /app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
-    command: npm run dev -- --host
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672" # App connection (AMQP)
+      - "15672:15672" # Web UI
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
 
 volumes:
   minio_data:
+  rabbitmq_data:
