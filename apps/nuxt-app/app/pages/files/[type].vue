@@ -1,0 +1,107 @@
+<template>
+    <AppHeader :firstName="'Gopal'" />
+    <div class="container">
+        <h3>Asset Overview Dashboard</h3>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Size (KB)</th>
+                    <th>Uploaded Date</th>
+                    <th>Status</th>
+                    <th>Action Button</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr v-for="file in files" :key="file.fileName">
+                    <td>{{ file.fileName }}</td>
+                    <td>{{ formatSize(file.size) }}</td>
+                    <td>{{ formatDate(file.createdAt) }}</td>
+                    <td>{{ file.status }}</td>
+                    <td>
+                        <button class="viewBtn">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p v-if="loading">Loading assets...</p>
+        <p v-if="error" class="error">{{ error }}</p>
+    </div>
+</template>
+
+<script setup>
+const route = useRoute()
+const type = computed(() => route.params.type)
+
+const { request } = useApi()
+const files = ref([])
+const loading = ref(false)
+const error = ref(null)
+
+const fetchFiles = async () => {
+    loading.value = true
+    error.value = null
+
+    try {
+        const res = await request(`/api/file/get?type=${type.value}`)
+        files.value = res
+    } catch (err) {
+        error.value = "Failed to load files"
+        console.error(err)
+    } finally {
+        loading.value = false
+    }
+}
+
+const formatDate = (date) => {
+    return new Date(date).toLocaleString()
+}
+
+const formatSize = (size) => {
+    return (size / 1024).toFixed(2)
+}
+
+onMounted(() => {
+    fetchFiles()
+})
+</script>
+
+<style scoped>
+.container {
+    padding: 20px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.table th,
+.table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.table th {
+    background: #1e293b;
+    color: white;
+}
+
+.error {
+    color: red;
+    margin-top: 10px;
+}
+
+.viewBtn {
+    padding: 4px;
+    color: #105ef0;
+    text-decoration: underline;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+</style>
