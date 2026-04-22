@@ -15,16 +15,14 @@
 </template>
 
 <script setup lang="ts">
-const { request } = useApi()
-const props = defineProps({
-    firstName: {
-        type: String,
-        default: "User"
-    }
-})
+// const props = defineProps({
+//     firstName: {
+//         type: String,
+//         default: "User"
+//     }
+// })
 
-const file = ref<File | null>(null)
-const fileUpload = ref<Boolean>(false)
+const fileUpload = ref<boolean>(false)
 
 </script>
 
