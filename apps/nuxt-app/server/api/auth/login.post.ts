@@ -1,3 +1,3 @@
-export default defineEventHandler(async (event) => {
-  return { authToken: "my-access-token" };
+export default defineEventHandler(async () => {
+  return { authToken: 'my-access-token' };
 });

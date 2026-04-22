@@ -32,7 +32,7 @@ const email = ref<string>("")
 const password = ref<string>("")
 
 const handleLogin = async () => {
-    const { data } = await request("/api/auth/login", {
+    await request("/api/auth/login", {
         method: "POST",
         body: {
             email: email.value,

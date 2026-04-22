@@ -1,5 +1,5 @@
 export const useApi = () => {
-  const token = "my-temp-token";
+  const token = 'my-temp-token';
 
   const loading = ref(false);
   const error = ref(null);
@@ -13,16 +13,16 @@ export const useApi = () => {
         ...options,
         headers: {
           ...(options.headers || {}),
-          Authorization: token ? `Bearer ${token}` : "",
+          Authorization: token ? `Bearer ${token}` : '',
         },
       });
 
       return { success: true, data };
     } catch (err: any) {
       const status = err?.response?.status;
-      error.value = err?.data?.message || "API Error";
+      error.value = err?.data?.message || 'API Error';
       if (status === 401) {
-        await navigateTo("/login"); // redirect
+        await navigateTo('/login'); // redirect
       }
 
       return { success: false, error: error.value };

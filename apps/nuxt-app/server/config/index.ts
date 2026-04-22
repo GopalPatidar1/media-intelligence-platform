@@ -1,5 +1,3 @@
-import { Sequelize } from "sequelize";
-
 const config = {
   appName: "Media Intelligence",
   env: process.env.NODE_ENV || "development",
