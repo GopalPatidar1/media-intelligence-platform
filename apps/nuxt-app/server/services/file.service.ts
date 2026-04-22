@@ -1,13 +1,13 @@
 // server/services/file.service.js
 import { getMinioClient } from "../utils/minio";
 import { FILE_TYPE_MAP } from "../utils/constants";
-import { createFileRecord, getFileStatsByType as getFilesGroupedByType, getFilesByType } from "../repositories/file";
+import { createFileRecord, getFileStatsByType, getFilesByType } from "../repositories/file";
 import { FileForm } from "../types/file";
 
 const BUCKET = "uploads";
 
-export const getFileStatsByType = async () => {
-  return await getFilesGroupedByType();
+export const fetchFileStatsByType = async () => {
+  return await getFileStatsByType();
 };
 
 export const fetchFilesByType = async (type: string) => {

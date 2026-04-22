@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@types/amqplib": "^0.10.8",
     "amqplib": "^1.0.3",
     "minio": "^8.0.7",
     "nuxt": "^4.4.2",

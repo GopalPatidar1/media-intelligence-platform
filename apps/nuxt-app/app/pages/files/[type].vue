@@ -9,6 +9,7 @@
                     <th>Name</th>
                     <th>Size (KB)</th>
                     <th>Uploaded Date</th>
+                    <th>Status</th>
                     <th>Action Button</th>
                 </tr>
             </thead>
@@ -18,8 +19,9 @@
                     <td>{{ file.fileName }}</td>
                     <td>{{ formatSize(file.size) }}</td>
                     <td>{{ formatDate(file.createdAt) }}</td>
+                    <td>{{ file.status }}</td>
                     <td>
-                        <NuxtLink :to="`/files/${file.fileType}`" class=" viewBtn">View Folder</NuxtLink>
+                        <button class="viewBtn">Delete</button>
                     </td>
                 </tr>
             </tbody>

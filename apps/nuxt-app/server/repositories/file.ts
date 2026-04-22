@@ -1,12 +1,19 @@
 // server/repositories/file.repository.js
 import { Sequelize } from "sequelize";
 import config from "../config";
-
-const { UserFile, Files } = config.sequelize.models;
+import { startSystem } from "../services/rabbitmq";
 
 export const createFileRecord = async (data: { userId: String; fileName: string; fileType: string; fileUrl: string; size: number }) => {
+  const { UserFile, Files } = config.sequelize.models;
   const file = await Files.create(data);
 
+  const asset = {
+    id: file.uid,
+    fileUrl: data.fileUrl,
+    status: "uploaded",
+  };
+
+  startSystem(asset);
   await UserFile.create({
     userId: data.userId,
     fileId: file.uid,
@@ -16,6 +23,7 @@ export const createFileRecord = async (data: { userId: String; fileName: string;
 };
 
 export const getFileStatsByType = async () => {
+  const { UserFile, Files } = config.sequelize.models;
   return await Files.findAll({
     attributes: [
       "fileType",
@@ -28,7 +36,7 @@ export const getFileStatsByType = async () => {
 };
 
 export const getFilesByType = async (type: string) => {
-  console.log("🚀 ~ getFilesByType ~ type:", type)
+  const { UserFile, Files } = config.sequelize.models;
   return await Files.findAll({
     where: {
       fileType: type,
