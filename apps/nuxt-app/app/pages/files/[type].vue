@@ -47,7 +47,7 @@ const fetchFiles = async () => {
 
     try {
         const res = await request(`/api/file/get?type=${type.value}`)
-        files.value = res
+        files.value = res.data
     } catch (err) {
         error.value = "Failed to load files"
         console.error(err)

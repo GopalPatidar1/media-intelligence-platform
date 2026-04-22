@@ -33,23 +33,14 @@
 </template>
 
 <script setup>
-const { request } = useApi()
+const { request, loading, error } = useApi()
 const files = ref([])
-const loading = ref(false)
-const error = ref(null)
-
 const fetchFiles = async () => {
-    loading.value = true
-    error.value = null
-
     try {
         const res = await request("/api/file/get")
-        files.value = res
+        files.value = res.data
     } catch (err) {
-        error.value = "Failed to load files"
         console.error(err)
-    } finally {
-        loading.value = false
     }
 }
 
