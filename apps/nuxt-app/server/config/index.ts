@@ -1,12 +1,13 @@
-const config = {
-  appName: "Media Intelligence",
-  env: process.env.NODE_ENV || "development",
+export const config = {
+  appName: 'Media Intelligence',
+  env: process.env.NODE_ENV || 'development',
+  jwtSecret: process.env.JWT_SECRET,
 
   db: {
-    name: "media_intelligence",
-    user: "postgres",
-    password: "",
-    host: "localhost",
+    name: 'media_intelligence',
+    user: 'postgres',
+    password: '',
+    host: 'localhost',
     port: 5432,
   },
 

@@ -44,6 +44,9 @@ export default [
         defineNuxtConfig: 'readonly',
         useRoute: 'readonly',
         localStorage: 'readonly',
+        useRouter: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout:'readonly',
 
         File: 'readonly',
         FormData: 'readonly',

@@ -1,3 +1,6 @@
+import jwt from 'jsonwebtoken';
+import config from '../config';
+
 export default defineEventHandler(async (event) => {
   const publisRoutes = ['/login'];
 
@@ -7,18 +10,22 @@ export default defineEventHandler(async (event) => {
 
   if (isPublicRoute || !path.includes('/api')) return;
 
-  const authHeader = getHeader(event, 'authorization');
+  const token = getCookie(event, 'authToken');
 
-  if (!authHeader) {
-    return sendRedirect(event, '/login', 302);
+  if (!token || !config.jwtSecret) {
+    return { success: false, message: 'Invalid token' };
   }
+  try {
+    const decoded = jwt.verify(token, config.jwtSecret) as {
+      uid: string;
+      email: string;
+    };
 
-  const token = authHeader.replace('Bearer ', '');
-
-  // 🔐 validate token (replace with real JWT verify)
-  const isValid = token === 'my-temp-token';
-
-  if (!isValid) {
-    return sendRedirect(event, '/login', 302);
+    event.context.user = { uid: decoded.uid, email: decoded.email };
+  } catch {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Invalid or expired token',
+    });
   }
 });

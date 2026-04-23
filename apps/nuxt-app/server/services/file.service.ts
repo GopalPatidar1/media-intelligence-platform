@@ -1,10 +1,12 @@
 // server/services/file.service.js
+import type { H3Event } from 'h3';
 import { getMinioClient } from '../utils/minio';
 import { FILE_TYPE_MAP } from '../utils/constants';
 import {
   createFileRecord,
   getFileStatsByType,
   getFilesByType,
+  deleteFileByIdRepo,
 } from '../repositories/file';
 import { FileForm } from '../types/file';
 
@@ -14,11 +16,22 @@ export const fetchFileStatsByType = async () => {
   return await getFileStatsByType();
 };
 
-export const fetchFilesByType = async (type: string) => {
-  return await getFilesByType(type);
+export const fetchFilesByType = async (
+  type: string,
+  where: { fileName?: string }
+) => {
+  return await getFilesByType(type, where);
 };
 
-export const uploadFileService = async (file: File, payload: FileForm) => {
+export const deleteFileById = async (id: string) => {
+  return await deleteFileByIdRepo(id);
+};
+
+export const uploadFileService = async (
+  file: any,
+  payload: FileForm,
+  event: H3Event
+) => {
   if (!file || !file.data) {
     throw createError({ statusCode: 400, statusMessage: 'Invalid file' });
   }
@@ -43,10 +56,12 @@ export const uploadFileService = async (file: File, payload: FileForm) => {
     }
   );
 
-  const userId = '60772477-4a68-4974-958f-b9506691ffcf';
-
+  console.log(
+    '🚀 ~ uploadFileService ~ event.context.user.uid:',
+    event.context.user.uid
+  );
   await createFileRecord({
-    userId,
+    userId: event.context.user.uid,
     fileType,
     fileUrl: path,
     size,

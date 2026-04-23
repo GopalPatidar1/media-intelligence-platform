@@ -4,6 +4,7 @@
             <div class="heading">
                 <h2>Login</h2>
                 <h3>Enter your details to login.</h3>
+                <p v-if="error" class="error">{{ error }}</p>
             </div>
 
             <div class="form-group">
@@ -20,7 +21,6 @@
                 {{ loading ? "Logging in..." : "Login" }}
             </button>
 
-            <p v-if="error" class="error">{{ error }}</p>
         </form>
     </div>
 </template>
@@ -39,7 +39,7 @@ const handleLogin = async () => {
             password: password.value,
         },
     });
-    // await navigateTo("/dashboard");
+    await navigateTo("/dashboard");
 };
 
 </script>
@@ -90,6 +90,6 @@ button {
 
 .error {
     color: red;
-    margin-top: 10px;
+    margin: 0;
 }
 </style>
