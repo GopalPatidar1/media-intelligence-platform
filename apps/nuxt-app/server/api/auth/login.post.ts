@@ -1,3 +1,6 @@
-export default defineEventHandler(async () => {
-  return { authToken: 'my-access-token' };
+import { loginService } from '../../services/login.service';
+
+export default defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  return await loginService(event, body);
 });

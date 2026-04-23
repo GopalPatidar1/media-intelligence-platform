@@ -1,7 +1,12 @@
 <template>
     <AppHeader :firstName="'Gopal'" />
     <div class="container">
-        <h3>Asset Overview Dashboard</h3>
+        <div class="header-container">
+            <button @click="() => router.back()"> Back to Dashboard </button>
+            <h3>{{ capitalizeWords(type) }} Asset Overview</h3>
+        </div>
+
+        <input class="search-box" v-model="searchText" placeholder="Search Asset Overview ">
 
         <table class="table">
             <thead>
@@ -16,37 +21,54 @@
 
             <tbody>
                 <tr v-for="file in files" :key="file.fileName">
-                    <td>{{ file.fileName }}</td>
+                    <td>{{ capitalizeWords(file.fileName) }}</td>
                     <td>{{ formatSize(file.size) }}</td>
                     <td>{{ formatDate(file.createdAt) }}</td>
-                    <td>{{ file.status }}</td>
+                    <td>{{ capitalizeWords(file.status) }}</td>
                     <td>
-                        <button class="viewBtn">Delete</button>
+                        <button class="view-btn" @click="() => deleteFile(file.uid)">Delete</button>
                     </td>
                 </tr>
             </tbody>
         </table>
 
-        <p v-if="loading">Loading assets...</p>
+        <p v-if="loading">{{ searchText ? "Searching assets..." : "Loading assets..." }}</p>
         <p v-if="error" class="error">{{ error }}</p>
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+const router = useRouter()
 const route = useRoute()
 const type = computed(() => route.params.type)
 
 const { request } = useApi()
 const files = ref([])
-const loading = ref(false)
-const error = ref(null)
+const loading = ref<boolean>(false)
+const error = ref<string>("")
+const searchText = ref<string>("")
+
+
+const deleteFile = async (uid: string) => {
+    const confirmed = window.confirm("Are you sure you want to delete this file?");
+    if (!confirmed) return;
+    await request(`/api/file/${uid}`, { method: "DELETE", })
+    alert("File deleted successfully");
+    files.value = files.value.filter((item) => item.uid != uid)
+
+}
 
 const fetchFiles = async () => {
     loading.value = true
-    error.value = null
-
+    error.value = ""
     try {
-        const res = await request(`/api/file/get?type=${type.value}`)
+        const query = searchText.value ? { where: { fileName: searchText.value } } : {}
+        const res = await request(`/api/file/get`, {
+            params: {
+                type: type.value,
+                ...query
+            }
+        })
         files.value = res.data
     } catch (err) {
         error.value = "Failed to load files"
@@ -56,11 +78,20 @@ const fetchFiles = async () => {
     }
 }
 
-const formatDate = (date) => {
+let timeout: any
+
+watch(searchText, () => {
+    clearTimeout(timeout)
+    timeout = setTimeout(async () => {
+        fetchFiles()
+    }, 400)
+})
+
+const formatDate = (date: Date) => {
     return new Date(date).toLocaleString()
 }
 
-const formatSize = (size) => {
+const formatSize = (size: number) => {
     return (size / 1024).toFixed(2)
 }
 
@@ -72,6 +103,20 @@ onMounted(() => {
 <style scoped>
 .container {
     padding: 20px;
+}
+
+.header-container {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.header-container button {
+    border: none;
+    background-color: transparent;
+    color: #105ef0;
+    font-size: large;
+    cursor: pointer;
 }
 
 .table {
@@ -96,12 +141,20 @@ onMounted(() => {
     margin-top: 10px;
 }
 
-.viewBtn {
+.view-btn {
     padding: 4px;
     color: #105ef0;
     text-decoration: underline;
     border: none;
     background-color: transparent;
     cursor: pointer;
+}
+
+.search-box {
+    padding: 5px;
+    border-color: #ddd;
+    border-radius: 5px;
+    border-width: 1px;
+    width: 250px;
 }
 </style>

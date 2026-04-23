@@ -1,11 +1,11 @@
 export default defineNuxtRouteMiddleware((to) => {
-  const token = useCookie("authToken").value;
-  const publicRoutes = ["/login", "/register"];
+  const token = useCookie('authenticated').value;
+  const publicRoutes = ['/login', '/register'];
 
   if (!token && !publicRoutes.includes(to.path)) {
-    return navigateTo("/login");
+    return navigateTo('/login');
   }
   if (token && publicRoutes.includes(to.path)) {
-    return navigateTo("/dashboard");
+    return navigateTo('/dashboard');
   }
 });

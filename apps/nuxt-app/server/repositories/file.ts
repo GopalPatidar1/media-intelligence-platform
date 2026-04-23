@@ -1,5 +1,5 @@
 // server/repositories/file.repository.js
-import { Sequelize } from 'sequelize';
+import { Sequelize, Op } from 'sequelize';
 import config from '../config';
 import { startSystem } from '../services/rabbitmq';
 
@@ -41,12 +41,25 @@ export const getFileStatsByType = async () => {
   });
 };
 
-export const getFilesByType = async (type: string) => {
+export const getFilesByType = async (
+  type: string,
+  where: { fileName?: string }
+) => {
   const { Files } = config.sequelize.models;
   return await Files.findAll({
     where: {
       fileType: type,
+      ...(where.fileName ? { fileName: { [Op.iLike]: `%${where.fileName}%` } } : {}),
     },
     order: [['createdAt', 'DESC']],
   });
+};
+
+export const deleteFileByIdRepo = async (id: string) => {
+  const { Files, UserFile } = config.sequelize.models;
+
+  await UserFile.destroy({ where: { fileId: id }, force: true });
+  await Files.destroy({ where: { uid: id }, force: true });
+
+  return { success: true };
 };

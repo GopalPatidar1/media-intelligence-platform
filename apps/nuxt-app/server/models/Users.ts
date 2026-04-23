@@ -1,13 +1,14 @@
-import Sequelize from "sequelize";
+import Sequelize, { Model } from 'sequelize';
+import bcryptjs from 'bcryptjs';
 
-export default (sequelize, DataTypes) => {
-  return Files.init(sequelize, DataTypes);
+export default (sequelize: any, DataTypes: any) => {
+  return Users.init(sequelize, DataTypes);
 };
 
-class Files extends Sequelize.Model {
-  static init(sequelize, DataTypes) {
+class Users extends Sequelize.Model {
+  static init(sequelize: any, DataTypes: any) {
     return sequelize.define(
-      "Files",
+      'Users',
       {
         uid: {
           type: DataTypes.UUID,
@@ -16,65 +17,56 @@ class Files extends Sequelize.Model {
           defaultValue: DataTypes.UUIDV4,
         },
 
-        fileName: {
+        name: {
           type: DataTypes.STRING,
           allowNull: false,
-          field: "file_name",
         },
 
-        fileType: {
-          type: DataTypes.ENUM("image", "video", "pdf", "doc", "other"),
-          allowNull: false,
-          field: "file_type",
-        },
-
-        fileUrl: {
+        email: {
           type: DataTypes.STRING,
           allowNull: false,
-          field: "file_url",
+          unique: true,
         },
 
-        size: {
-          type: DataTypes.INTEGER,
+        password: {
+          type: DataTypes.STRING,
           allowNull: false,
+          set(this: Model, value: string) {
+            this.setDataValue('password', bcryptjs.hashSync(value, 10));
+          },
         },
 
-        status: {
-          type: DataTypes.STRING(20),
-          allowNull: true,
+        role: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          defaultValue: 'member',
         },
-
-        department: {
-          type: DataTypes.STRING(100),
-          allowNull: true,
-        },
-
         createdAt: {
           type: DataTypes.DATE,
           allowNull: false,
           defaultValue: DataTypes.NOW,
-          field: "created_at",
+          field: 'created_at',
           validate: { isDate: true },
         },
         updatedAt: {
           type: DataTypes.DATE,
           allowNull: false,
           defaultValue: DataTypes.NOW,
-          field: "updated_at",
+          field: 'updated_at',
           validate: { isDate: true },
         },
         deletedAt: {
           type: DataTypes.DATE,
           allowNull: true,
-          field: "deleted_at",
+          field: 'deleted_at',
           validate: { isDate: true },
         },
       },
       {
-        tableName: "files",
+        tableName: 'users',
         timestamps: true,
         paranoid: true,
-      },
+      }
     );
   }
 }

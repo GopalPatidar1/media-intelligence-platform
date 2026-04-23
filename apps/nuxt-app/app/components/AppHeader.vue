@@ -8,21 +8,33 @@
         <div class="right">
             <button type="button" class="btn" @click="fileUpload = true">Upload File
             </button>
+
+            <button type="button" class="btn" @click="logoutUser">Logout
+            </button>
         </div>
+
+
 
         <UploadModal v-if="fileUpload" @close="fileUpload = false" />
     </header>
 </template>
 
 <script setup lang="ts">
-// const props = defineProps({
-//     firstName: {
-//         type: String,
-//         default: "User"
-//     }
-// })
+const { request } = useApi()
+defineProps({
+    firstName: {
+        type: String,
+        default: "User"
+    }
+})
 
 const fileUpload = ref<boolean>(false)
+
+const logoutUser = async () => {
+    await request("/api/auth/logout")
+    navigateTo("/login")
+    return true
+}
 
 </script>
 

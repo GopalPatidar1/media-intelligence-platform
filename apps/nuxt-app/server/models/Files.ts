@@ -1,13 +1,13 @@
 import Sequelize from "sequelize";
 
-export default (sequelize, DataTypes) => {
-  return Users.init(sequelize, DataTypes);
+export default (sequelize: any, DataTypes: any) => {
+  return Files.init(sequelize, DataTypes);
 };
 
-class Users extends Sequelize.Model {
-  static init(sequelize, DataTypes) {
+class Files extends Sequelize.Model {
+  static init(sequelize: any, DataTypes: any) {
     return sequelize.define(
-      "Users",
+      "Files",
       {
         uid: {
           type: DataTypes.UUID,
@@ -16,27 +16,39 @@ class Users extends Sequelize.Model {
           defaultValue: DataTypes.UUIDV4,
         },
 
-        name: {
+        fileName: {
           type: DataTypes.STRING,
+          allowNull: false,
+          field: "file_name",
+        },
+
+        fileType: {
+          type: DataTypes.ENUM("image", "video", "pdf", "doc", "other"),
+          allowNull: false,
+          field: "file_type",
+        },
+
+        fileUrl: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          field: "file_url",
+        },
+
+        size: {
+          type: DataTypes.INTEGER,
           allowNull: false,
         },
 
-        email: {
-          type: DataTypes.STRING,
-          allowNull: false,
-          unique: true,
+        status: {
+          type: DataTypes.STRING(20),
+          allowNull: true,
         },
 
-        password: {
-          type: DataTypes.STRING,
-          allowNull: false,
+        department: {
+          type: DataTypes.STRING(100),
+          allowNull: true,
         },
 
-        role: {
-          type: DataTypes.STRING,
-          allowNull: false,
-          defaultValue: "member",
-        },
         createdAt: {
           type: DataTypes.DATE,
           allowNull: false,
@@ -59,7 +71,7 @@ class Users extends Sequelize.Model {
         },
       },
       {
-        tableName: "users",
+        tableName: "files",
         timestamps: true,
         paranoid: true,
       },
