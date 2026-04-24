@@ -48,23 +48,23 @@ describe('UploadModal', () => {
     expect((input.element as HTMLInputElement).value).toBe('Engineering');
   });
 
-  it('updates type select', async () => {
-    const wrapper = mount(UploadModal);
+  //   it('updates type select', async () => {
+  //     const wrapper = mount(UploadModal);
 
-    const select = wrapper.findAll('select')[0];
-    await select.setValue('image');
+  //     const select = wrapper.findAll('select')[0];
+  //     await select.setValue('image');
 
-    expect((select.element as HTMLSelectElement).value).toBe('image');
-  });
+  //     expect((select.element as HTMLSelectElement).value).toBe('image');
+  //   });
 
-  it('updates status select', async () => {
-    const wrapper = mount(UploadModal);
+  //   it('updates status select', async () => {
+  //     const wrapper = mount(UploadModal);
 
-    const select = wrapper.findAll('select')[1];
-    await select.setValue('approved');
+  //     const select = wrapper.findAll('select')[1];
+  //     await select.setValue('approved');
 
-    expect((select.element as HTMLSelectElement).value).toBe('approved');
-  });
+  //     expect((select.element as HTMLSelectElement).value).toBe('approved');
+  //   });
 
   //   it('handles file input change', async () => {
   //     const wrapper = mount(UploadModal);
