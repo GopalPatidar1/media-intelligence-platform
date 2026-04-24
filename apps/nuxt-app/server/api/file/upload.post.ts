@@ -1,5 +1,5 @@
-import { uploadFileService } from '../../services/file.service';
-import { FileForm } from '../../types/file';
+import { uploadFileService } from '@@/server/services/file.service';
+import { FileForm } from '@@/server/types/file';
 
 export default defineEventHandler(async (event) => {
   const files = await readMultipartFormData(event);

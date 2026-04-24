@@ -1,10 +1,15 @@
 <template>
     <div class="login-container">
-        <form @submit.prevent="handleLogin">
+        <form @submit.prevent="handleRegister">
             <div class="heading">
-                <h2>Login</h2>
-                <h3>Enter your details to login.</h3>
+                <h2>Register</h2>
+                <h3>Create your account.</h3>
                 <p v-if="error" class="error">{{ error }}</p>
+            </div>
+
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input id="name" v-model="name" type="text" placeholder="Enter your name" required />
             </div>
 
             <div class="form-group">
@@ -18,35 +23,38 @@
             </div>
 
             <button type="submit" :disabled="loading">
-                {{ loading ? "Logging in..." : "Login" }}
+                {{ loading ? "Registering..." : "Register" }}
             </button>
 
             <p class="redirect">
-                Don't have an account?
-                <NuxtLink to="/register">Create one</NuxtLink>
+                Already have an account?
+                <NuxtLink to="/login">Login</NuxtLink>
             </p>
-
         </form>
     </div>
 </template>
 
 <script setup lang="ts">
 import { useApi } from '~/composables/useApi'
+
 const { request, loading, error } = useApi()
+
+const name = ref<string>("")
 const email = ref<string>("")
 const password = ref<string>("")
 
-const handleLogin = async () => {
-    await request("/api/auth/login", {
+const handleRegister = async () => {
+    await request("/api/auth/register", {
         method: "POST",
         body: {
+            name: name.value,
             email: email.value,
             password: password.value,
         },
-    });
-    await navigateTo("/dashboard");
-};
+    })
 
+    await navigateTo("/login")
+}
 </script>
 
 <style scoped>
@@ -81,7 +89,6 @@ input {
     border-radius: 5px;
     border-width: 1px;
     box-sizing: border-box;
-
 }
 
 button {

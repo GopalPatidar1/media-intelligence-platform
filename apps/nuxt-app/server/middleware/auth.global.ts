@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import config from '../config';
 
 export default defineEventHandler(async (event) => {
-  const publisRoutes = ['/login'];
+  const publisRoutes = ['/login', '/register'];
 
   const path = event.path;
 

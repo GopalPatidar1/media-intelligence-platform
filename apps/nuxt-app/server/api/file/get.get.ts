@@ -1,9 +1,10 @@
+import type { H3Event } from 'h3';
 import {
   fetchFileStatsByType,
   fetchFilesByType,
 } from '../../services/file.service';
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (event: H3Event) => {
   await new Promise((resolve) => setTimeout(resolve, 5000));
 
   const query = getQuery(event);
@@ -13,8 +14,8 @@ export default defineEventHandler(async (event) => {
     parseWhere = where ? JSON.parse(where) : {};
   }
   if (type) {
-    return await fetchFilesByType(type as string, parseWhere);
+    return await fetchFilesByType(event, type as string, parseWhere);
   }
 
-  return await fetchFileStatsByType();
+  return await fetchFileStatsByType(event);
 });

@@ -1,26 +1,26 @@
-// server/services/file.service.js
 import type { H3Event } from 'h3';
-import { getMinioClient } from '../utils/minio';
-import { FILE_TYPE_MAP } from '../utils/constants';
+import { getMinioClient } from '@@/server/utils/minio';
+import { FILE_TYPE_MAP } from '@@/server/utils/constants';
 import {
   createFileRecord,
   getFileStatsByType,
   getFilesByType,
   deleteFileByIdRepo,
 } from '../repositories/file';
-import { FileForm } from '../types/file';
+import { FileForm } from '@@/server/types/file';
 
 const BUCKET = 'uploads';
 
-export const fetchFileStatsByType = async () => {
-  return await getFileStatsByType();
+export const fetchFileStatsByType = async (event: H3Event) => {
+  return await getFileStatsByType(event);
 };
 
 export const fetchFilesByType = async (
+  event: H3Event,
   type: string,
   where: { fileName?: string }
 ) => {
-  return await getFilesByType(type, where);
+  return await getFilesByType(event, type, where);
 };
 
 export const deleteFileById = async (id: string) => {
@@ -56,10 +56,6 @@ export const uploadFileService = async (
     }
   );
 
-  console.log(
-    '🚀 ~ uploadFileService ~ event.context.user.uid:',
-    event.context.user.uid
-  );
   await createFileRecord({
     userId: event.context.user.uid,
     fileType,
