@@ -46,7 +46,8 @@ export default [
         localStorage: 'readonly',
         useRouter: 'readonly',
         setTimeout: 'readonly',
-        clearTimeout:'readonly',
+        clearTimeout: 'readonly',
+        onErrorCaptured: 'readonly',
 
         File: 'readonly',
         FormData: 'readonly',

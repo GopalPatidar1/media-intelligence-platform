@@ -15,7 +15,7 @@ export default defineConfig({
     alias: {
       '~': path.resolve(__dirname, './app'),
       '@': path.resolve(__dirname, './app'),
-      '@server': path.resolve(__dirname, './server'),
+      '@@': path.resolve(__dirname, ''),
     },
   },
 
