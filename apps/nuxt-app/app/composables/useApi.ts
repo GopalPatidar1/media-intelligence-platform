@@ -1,6 +1,4 @@
 export const useApi = () => {
-  const token = 'my-temp-token';
-
   const loading = ref(false);
   const error = ref(null);
 
@@ -13,7 +11,6 @@ export const useApi = () => {
         ...options,
         headers: {
           ...(options.headers || {}),
-          Authorization: token ? `Bearer ${token}` : '',
         },
       });
 

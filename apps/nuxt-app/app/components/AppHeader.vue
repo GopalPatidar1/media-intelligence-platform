@@ -20,6 +20,7 @@
 </template>
 
 <script setup lang="ts">
+import { useApi } from '@/composables/useApi'
 const { request } = useApi()
 defineProps({
     firstName: {

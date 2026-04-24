@@ -3,7 +3,10 @@
     <div class="container">
         <h3>Asset Overview Dashboard</h3>
 
-        <table class="table">
+        <p v-if="!files.length && !loading">
+            No assets available yet. Upload files to see them here.
+        </p>
+        <table class="table" v-if="files.length">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -33,6 +36,7 @@
 </template>
 
 <script setup>
+import { useApi } from '~/composables/useApi'
 const { request, loading, error } = useApi()
 const files = ref([])
 const fetchFiles = async () => {

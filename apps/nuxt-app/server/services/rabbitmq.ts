@@ -1,8 +1,8 @@
 import amqp from 'amqplib';
-import config from '../config';
+import config from '@@/server/config';
 
-const RABBITMQ_USER = 'admin';
-const RABBITMQ_PASS = 'Mq@321$#@';
+const RABBITMQ_USER = config.rabbitmqUser;
+const RABBITMQ_PASS = config.rabbitmqPass;
 const RABBIT_URL = `amqp://${RABBITMQ_USER}:${encodeURIComponent(RABBITMQ_PASS!)}@rabbitmq:5672`;
 const EXCHANGE = 'asset.exchange';
 

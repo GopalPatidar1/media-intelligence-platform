@@ -1,7 +1,7 @@
-import config from '../config';
+import config from '@@/server/config';
 import jsonwebtoken from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { fetchUserByEmail } from '../repositories/user';
+import { fetchUserByEmail } from '@@/server/repositories/user';
 
 export const loginService = async (
   event: any,

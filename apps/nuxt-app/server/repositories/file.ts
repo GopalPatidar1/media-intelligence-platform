@@ -1,4 +1,4 @@
-// server/repositories/file.repository.js
+import type { H3Event } from 'h3';
 import { Sequelize, Op } from 'sequelize';
 import config from '../config';
 import { startSystem } from '../services/rabbitmq';
@@ -28,28 +28,47 @@ export const createFileRecord = async (data: {
   return file;
 };
 
-export const getFileStatsByType = async () => {
+export const getFileStatsByType = async (event: H3Event) => {
   const { Files } = config.sequelize.models;
   return await Files.findAll({
+    include: [
+      {
+        association: 'userFile',
+        attributes: [],
+        where: { userId: event.context.user.uid },
+      },
+    ],
     attributes: [
       'fileType',
       [Sequelize.fn('COUNT', Sequelize.col('file_type')), 'count'],
-      [Sequelize.fn('MAX', Sequelize.col('created_at')), 'createdAt'],
+      [Sequelize.fn('MAX', Sequelize.col('Files.created_at')), 'createdAt'],
       [Sequelize.fn('SUM', Sequelize.col('size')), 'size'],
     ],
     group: ['fileType'],
+    raw: true,
+    nest: true,
   });
 };
 
 export const getFilesByType = async (
+  event: H3Event,
   type: string,
   where: { fileName?: string }
 ) => {
   const { Files } = config.sequelize.models;
   return await Files.findAll({
+    include: [
+      {
+        association: 'userFile',
+        attributes: [],
+        where: { userId: event.context.user.uid },
+      },
+    ],
     where: {
       fileType: type,
-      ...(where.fileName ? { fileName: { [Op.iLike]: `%${where.fileName}%` } } : {}),
+      ...(where.fileName
+        ? { fileName: { [Op.iLike]: `%${where.fileName}%` } }
+        : {}),
     },
     order: [['createdAt', 'DESC']],
   });
