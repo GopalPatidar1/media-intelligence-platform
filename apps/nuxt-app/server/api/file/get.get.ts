@@ -6,7 +6,6 @@ import {
 
 export default defineEventHandler(async (event: H3Event) => {
   await new Promise((resolve) => setTimeout(resolve, 5000));
-
   const query = getQuery(event);
   const { type, where } = query;
   let parseWhere: { fileName?: string } = {};

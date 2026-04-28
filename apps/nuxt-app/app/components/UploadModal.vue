@@ -132,16 +132,8 @@ const submit = async () => {
     formData.append('status', form.status)
     formData.append('department', form.department)
 
-    try {
-        await request('/api/file/upload', {
-            method: 'POST',
-            body: formData
-        })
-        emit('close')
-    } catch (err) {
-        console.error(err)
-        alert('Upload failed')
-    }
+    await request('/api/file/upload', { method: 'POST', body: formData })
+    emit('close')
 }
 </script>
 
