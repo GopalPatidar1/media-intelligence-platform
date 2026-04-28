@@ -2,9 +2,8 @@
   <div>
     <!-- Main App -->
     <NuxtPage v-if="!hasError" />
-
-    <!-- Global Toast message -->
     <GlobalMessage />
+    <ConfirmModal />
 
     <div v-if="hasError" class="error-modal">
       <div class="error-box">

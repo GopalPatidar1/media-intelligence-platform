@@ -38,22 +38,34 @@
 </template>
 
 <script setup lang="ts">
+import { useConfirm } from "@/composables/useConfirm"
+import { useMessage } from "@/composables/useMessage"
+
+const { confirm } = useConfirm()
+const { showMessage } = useMessage()
 const router = useRouter()
-const route = useRoute()
-const type = computed(() => route.params.type)
+const route = useRoute();
+const type = computed(() => route.params.type as string)
 
 const { request } = useApi()
-const files = ref([])
+const files = ref<{
+    firstName: string
+    fileName: string
+    size: number
+    createdAt: string
+    status: string
+    uid: string
+}[]>([])
 const loading = ref<boolean>(false)
 const error = ref<string>("")
 const searchText = ref<string>("")
 
 
 const deleteFile = async (uid: string) => {
-    const confirmed = window.confirm("Are you sure you want to delete this file?");
+    const confirmed = await confirm({ message: "Are you sure you want to delete this file?" });
     if (!confirmed) return;
     await request(`/api/file/${uid}`, { method: "DELETE", })
-    alert("File deleted successfully");
+    showMessage("File deleted successfully");
     files.value = files.value.filter((item) => item.uid != uid)
 
 }

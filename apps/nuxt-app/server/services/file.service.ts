@@ -37,7 +37,7 @@ export const uploadFileService = async (
   }
   const fileType = FILE_TYPE_MAP[file.type];
   if (!fileType) {
-    return { statusMessage: 'Invalid file type' };
+    throw createError({ statusCode: 400, statusMessage: 'Invalid file type' });
   }
 
   const fileName = `${fileType}/${file.filename}`;

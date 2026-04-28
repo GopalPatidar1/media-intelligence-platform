@@ -25,6 +25,10 @@ export const useApi = () => {
         await navigateTo('/login'); // redirect
       }
 
+      if (err?.data?.statusMessage) {
+        showMessage(err?.data?.statusMessage, 'error');
+      }
+
       return { success: false, error: error.value };
     } finally {
       loading.value = false;
