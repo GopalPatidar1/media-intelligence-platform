@@ -3,7 +3,9 @@
     <!-- Main App -->
     <NuxtPage v-if="!hasError" />
 
-    <!-- Global Error Modal -->
+    <!-- Global Toast message -->
+    <GlobalMessage />
+
     <div v-if="hasError" class="error-modal">
       <div class="error-box">
         <h2>Something went wrong 😢</h2>
