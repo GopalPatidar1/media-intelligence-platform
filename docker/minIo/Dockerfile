@@ -8,4 +8,4 @@ ENV MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
 EXPOSE 10000
 
 # Run MinIO on single port
-CMD ["server", "/data", "--address", ":10000", "--console-address", ":10000"]
+CMD ["server", "/data", "--address", ":10000"]
