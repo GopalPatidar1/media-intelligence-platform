@@ -1,18 +1,21 @@
 export const useApi = () => {
   const loading = ref(false);
   const error = ref(null);
+  const { showMessage } = useMessage();
 
   const request = async (url: string, options: any = {}) => {
     loading.value = true;
     error.value = null;
 
     try {
-      const data = await $fetch(url, {
+      const data: any = await $fetch(url, {
         ...options,
         headers: {
           ...(options.headers || {}),
         },
       });
+
+      if (data.statusMessage) showMessage(data.statusMessage, 'success');
 
       return { success: true, data };
     } catch (err: any) {

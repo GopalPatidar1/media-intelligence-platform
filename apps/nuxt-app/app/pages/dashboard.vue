@@ -19,7 +19,7 @@
 
             <tbody>
                 <tr v-for="file in files" :key="file.name">
-                    <td>{{ file.fileType }}</td>
+                    <td>{{ capitalizeWords(file.fileType) }}</td>
                     <td>{{ file.count }}</td>
                     <td>{{ formatSize(file.size) }}</td>
                     <td>{{ formatDate(file.createdAt) }}</td>
@@ -46,14 +46,6 @@ const fetchFiles = async () => {
     } catch (err) {
         console.error(err)
     }
-}
-
-const formatDate = (date) => {
-    return new Date(date).toLocaleString()
-}
-
-const formatSize = (size) => {
-    return (size / 1024).toFixed(2)
 }
 
 onMounted(() => {

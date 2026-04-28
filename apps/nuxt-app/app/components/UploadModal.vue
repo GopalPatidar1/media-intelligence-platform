@@ -62,10 +62,12 @@
 </template>
 
 <script setup lang="ts">
+import { useMessage } from "@/composables/useMessage"
 import { useApi } from '@/composables/useApi'
 import type { FileForm } from '../types/file'
 
 const { request } = useApi()
+const { showMessage } = useMessage()
 const emit = defineEmits(['close'])
 
 const file = ref<File | null>(null)
@@ -103,7 +105,7 @@ const validateFile = (selectedFile?: File) => {
     if (!selectedFile) return
 
     if (selectedFile.size > MAX_FILE_SIZE) {
-        alert('File size must be less than 5MB')
+        showMessage('File size must be less than 5MB', "error")
         file.value = null
         return
     }
@@ -119,7 +121,7 @@ const formatSize = (size: number) => {
 // Submit
 const submit = async () => {
     if (!file.value) {
-        alert('Please select a file')
+        showMessage('Please select a file', "error")
         return
     }
 
@@ -135,8 +137,6 @@ const submit = async () => {
             method: 'POST',
             body: formData
         })
-
-        alert('File uploaded successfully!')
         emit('close')
     } catch (err) {
         console.error(err)
@@ -221,6 +221,7 @@ select {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
+    margin-top: 20px;
 }
 
 .btn {

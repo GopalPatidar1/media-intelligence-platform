@@ -37,7 +37,7 @@ export const uploadFileService = async (
   }
   const fileType = FILE_TYPE_MAP[file.type];
   if (!fileType) {
-    return { error: 'Invalid file type' };
+    return { statusMessage: 'Invalid file type' };
   }
 
   const fileName = `${fileType}/${file.filename}`;
@@ -65,7 +65,7 @@ export const uploadFileService = async (
   });
 
   return {
-    message: 'Upload successful',
+    statusMessage: 'Upload successful',
     fileName,
     url: `http://localhost:9001/${path}`,
   };

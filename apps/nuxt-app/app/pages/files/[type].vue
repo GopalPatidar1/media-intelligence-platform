@@ -87,14 +87,6 @@ watch(searchText, () => {
     }, 400)
 })
 
-const formatDate = (date: Date) => {
-    return new Date(date).toLocaleString()
-}
-
-const formatSize = (size: number) => {
-    return (size / 1024).toFixed(2)
-}
-
 onMounted(() => {
     fetchFiles()
 })
