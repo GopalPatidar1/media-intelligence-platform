@@ -1,4 +1,4 @@
-# 📦 Nuxt Monorepo Application
+# Nuxt Monorepo Application
 
 This project is a **monorepo-based application** built with **Nuxt 3 framework**, integrated with:
 
@@ -8,7 +8,7 @@ This project is a **monorepo-based application** built with **Nuxt 3 framework**
 
 ---
 
-## 🚀 Features
+## Features
 
 * Modern frontend with Nuxt 3
 * File upload & storage using MinIO
@@ -19,7 +19,7 @@ This project is a **monorepo-based application** built with **Nuxt 3 framework**
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```id="o84jmw"
 .
@@ -31,7 +31,7 @@ This project is a **monorepo-based application** built with **Nuxt 3 framework**
 
 ---
 
-## 🐳 Services Overview
+## Services Overview
 
 ### 1. Frontend (Nuxt App)
 
@@ -65,7 +65,7 @@ Used for:
 
 ---
 
-## ⚙️ Environment Variables
+## Environment Variables
 
 Create a `.env` file in root:
 
@@ -79,7 +79,7 @@ RABBITMQ_PASS=password
 
 ---
 
-## ▶️ Getting Started
+## Getting Started
 
 ### 1. Clone the repository
 
@@ -108,7 +108,7 @@ docker-compose up --build
 
 ---
 
-## 🛠️ Development Notes
+## Development Notes
 
 * Frontend runs in **development mode inside Docker**
 * Uses:
@@ -121,7 +121,7 @@ npm run dev -- --host 0.0.0.0
 
 ---
 
-## 🧠 Architecture Overview
+## Architecture Overview
 
 ```id="nhzklx"
 User → Nuxt App → API → RabbitMQ → Worker → MinIO
@@ -131,15 +131,15 @@ User → Nuxt App → API → RabbitMQ → Worker → MinIO
 
 ## ⚡ Key Implementations
 
-* ✅ Global error handling (UI + API)
-* ✅ Toast notification system
-* ✅ Reusable confirmation modal
-* ✅ API response standardization
-* 🔄 Upcoming: caching improvements
+* Global error handling (UI + API)
+* Toast notification system
+* Reusable confirmation modal
+* API response standardization
+* Upcoming: caching improvements
 
 ---
 
-## 🧪 Future Improvements
+## Future Improvements
 
 * API response caching
 * State management using Pinia or built-in composables
@@ -148,7 +148,7 @@ User → Nuxt App → API → RabbitMQ → Worker → MinIO
 
 ---
 
-## 🚫 Troubleshooting
+## Troubleshooting
 
 ### Port already in use
 
