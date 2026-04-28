@@ -129,7 +129,7 @@ User → Nuxt App → API → RabbitMQ → Worker → MinIO
 
 ---
 
-## ⚡ Key Implementations
+## Key Implementations
 
 * Global error handling (UI + API)
 * Toast notification system
@@ -167,13 +167,13 @@ docker-compose up --build
 
 ---
 
-## 📌 Notes
+## Notes
 
 * This project currently includes an **MVP implementation**
 * Ongoing work focuses on performance and scalability improvements
 
 ---
 
-## 📄 License
+## License
 
 This project is for assignment/demo purposes.
