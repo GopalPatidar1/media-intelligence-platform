@@ -48,6 +48,7 @@ export default [
         setTimeout: 'readonly',
         clearTimeout: 'readonly',
         onErrorCaptured: 'readonly',
+        useState: 'readonly',
 
         File: 'readonly',
         FormData: 'readonly',

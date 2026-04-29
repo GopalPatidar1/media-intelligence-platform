@@ -38,11 +38,15 @@
 <script setup>
 import { useApi } from '~/composables/useApi'
 const { request, loading, error } = useApi()
-const files = ref([])
+const fetched = useState("filesFetched", () => false)
+const files = useState("files", () => [])
+
 const fetchFiles = async () => {
+    if (fetched.value) return
     try {
         const res = await request("/api/file/get")
         files.value = res.data
+        fetched.value = true
     } catch (err) {
         console.error(err)
     }
