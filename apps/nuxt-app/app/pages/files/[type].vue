@@ -21,6 +21,14 @@
 
             <tbody>
                 <tr v-for="file in files" :key="file.fileName">
+                    <!-- <div v-if="type && type.startsWith('image')">
+                        <img :src="file.fileUrl" alt="preview" style="width: 50px; height: 50px; object-fit: cover;" />
+                        <div>{{ capitalizeWords(file.fileName) }}</div>
+                    </div>
+                    <div v-else>
+                        {{ capitalizeWords(file.fileName) }}
+                    </div> -->
+
                     <td>{{ capitalizeWords(file.fileName) }}</td>
                     <td>{{ formatSize(file.size) }}</td>
                     <td>{{ formatDate(file.createdAt) }}</td>
@@ -40,7 +48,6 @@
 <script setup lang="ts">
 import { useConfirm } from "@/composables/useConfirm"
 import { useMessage } from "@/composables/useMessage"
-
 const { confirm } = useConfirm()
 const { showMessage } = useMessage()
 const router = useRouter()
@@ -48,40 +55,47 @@ const route = useRoute();
 const type = computed(() => route.params.type as string)
 
 const { request } = useApi()
-const files = ref<{
-    firstName: string
-    fileName: string
-    size: number
-    createdAt: string
-    status: string
-    uid: string
-}[]>([])
+
 const loading = ref<boolean>(false)
 const error = ref<string>("")
 const searchText = ref<string>("")
 
+const filesMap = useState<Record<string, any[]>>("filesMap", () => ({}))
+const fetchedTypes = useState<Record<string, boolean>>("fetchedTypes", () => ({}))
 
 const deleteFile = async (uid: string) => {
+    const currentType = type.value
     const confirmed = await confirm({ message: "Are you sure you want to delete this file?" });
     if (!confirmed) return;
     await request(`/api/file/${uid}`, { method: "DELETE", })
     showMessage("File deleted successfully");
-    files.value = files.value.filter((item) => item.uid != uid)
-
+    if (filesMap.value[currentType])
+        filesMap.value[currentType] = filesMap.value[currentType].filter((item) => item.uid != uid)
 }
 
-const fetchFiles = async () => {
+const fetchFiles = async (force = false) => {
+    const currentType = type.value
+
+    if (fetchedTypes.value[currentType] && !force) return
+
     loading.value = true
     error.value = ""
+
     try {
-        const query = searchText.value ? { where: { fileName: searchText.value } } : {}
+        const query = searchText.value
+            ? { where: { fileName: searchText.value } }
+            : {}
+
         const res = await request(`/api/file/get`, {
             params: {
-                type: type.value,
+                type: currentType,
                 ...query
             }
         })
-        files.value = res.data
+
+        filesMap.value[currentType] = res.data
+        fetchedTypes.value[currentType] = true
+
     } catch (err) {
         error.value = "Failed to load files"
         console.error(err)
@@ -89,6 +103,10 @@ const fetchFiles = async () => {
         loading.value = false
     }
 }
+
+const files = computed(() => {
+    return filesMap.value[type.value] || []
+})
 
 let timeout: any
 
