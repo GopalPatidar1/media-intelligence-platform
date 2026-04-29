@@ -3,10 +3,10 @@
     <div class="container">
         <h3>Asset Overview Dashboard</h3>
 
-        <p v-if="!files.length && !loading">
+        <p v-if="!fileStore.files.length && !fileStore.loading">
             No assets available yet. Upload files to see them here.
         </p>
-        <table class="table" v-if="files.length">
+        <table class="table" v-if="fileStore.files.length">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -18,7 +18,7 @@
             </thead>
 
             <tbody>
-                <tr v-for="file in files" :key="file.name">
+                <tr v-for="file in fileStore.files" :key="file.name">
                     <td>{{ capitalizeWords(file.fileType) }}</td>
                     <td>{{ file.count }}</td>
                     <td>{{ formatSize(file.size) }}</td>
@@ -30,31 +30,20 @@
             </tbody>
         </table>
 
-        <p v-if="loading">Loading assets...</p>
-        <p v-if="error" class="error">{{ error }}</p>
+        <p v-if="fileStore.loading">Loading assets...</p>
+        <p v-if="fileStore.error" class="error">{{ fileStore.error }}</p>
     </div>
 </template>
 
 <script setup>
-import { useApi } from '~/composables/useApi'
-const { request, loading, error } = useApi()
-const fetched = useState("filesFetched", () => false)
-const files = useState("files", () => [])
+import { useFileStore } from '@/stores/fileStore'
 
-const fetchFiles = async () => {
-    if (fetched.value) return
-    try {
-        const res = await request("/api/file/get")
-        files.value = res.data
-        fetched.value = true
-    } catch (err) {
-        console.error(err)
-    }
-}
+const fileStore = useFileStore()
 
 onMounted(() => {
-    fetchFiles()
+    fileStore.fetchFiles()
 })
+
 </script>
 
 <style scoped>
