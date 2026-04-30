@@ -1,4 +1,4 @@
-import type { H3Event } from 'h3';
+import { H3Event } from 'h3';
 import { getMinioClient } from '@@/server/utils/minio';
 import { FILE_TYPE_MAP, MIME_MAP } from '@@/server/utils/constants';
 import {
@@ -7,6 +7,7 @@ import {
   getFilesByType,
   deleteFileByIdRepo,
   getFileByUid,
+  updateFileRecord,
 } from '../repositories/file';
 import { FileForm } from '@@/server/types/file';
 
@@ -53,11 +54,7 @@ export const deleteFileById = async (id: string) => {
   return await deleteFileByIdRepo(id);
 };
 
-export const uploadFileService = async (
-  file: any,
-  payload: FileForm,
-  event: H3Event
-) => {
+const validateFileType = async (file: any, payload: FileForm) => {
   if (!file || !file.data) {
     throw createError({ statusCode: 400, statusMessage: 'Invalid file' });
   }
@@ -71,15 +68,31 @@ export const uploadFileService = async (
   const size = file.data.byteLength;
 
   if (!payload.fileName) payload.fileName = file.filename;
+  try {
+    await getMinioClient().putObject(
+      BUCKET,
+      fileName,
+      file.data,
+      file.data.length,
+      {
+        'Content-Type': file.type || 'application/octet-stream',
+      }
+    );
+  } catch {
+    throw createError({ statusCode: 500, statusMessage: 'File upload failed' });
+  }
 
-  await getMinioClient().putObject(
-    BUCKET,
-    fileName,
-    file.data,
-    file.data.length,
-    {
-      'Content-Type': file.type || 'application/octet-stream',
-    }
+  return { fileType, fileName, path, size };
+};
+
+export const uploadFileService = async (
+  file: any,
+  payload: FileForm,
+  event: H3Event
+) => {
+  const { fileType, fileName, path, size } = await validateFileType(
+    file,
+    payload
   );
 
   await createFileRecord({
@@ -92,6 +105,31 @@ export const uploadFileService = async (
 
   return {
     statusMessage: 'Upload successful',
+    fileName,
+    url: `http://localhost:9001/${path}`,
+  };
+};
+
+export const updateFileByUid = async (
+  event: H3Event,
+  file: any,
+  payload: FileForm
+) => {
+  const { fileType, fileName, path, size } = await validateFileType(
+    file,
+    payload
+  );
+
+  await updateFileRecord(event, {
+    userId: event.context.user.uid,
+    fileType,
+    fileUrl: path,
+    size,
+    ...payload,
+  });
+
+  return {
+    statusMessage: 'File updated successfully',
     fileName,
     url: `http://localhost:9001/${path}`,
   };

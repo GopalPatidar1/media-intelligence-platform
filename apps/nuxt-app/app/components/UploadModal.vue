@@ -66,12 +66,19 @@ import { useMessage } from "@/composables/useMessage"
 import { useApi } from '@/composables/useApi'
 import type { FileForm } from '../types/file'
 
+const props = defineProps({
+    data: {
+        type: Object,
+        required: true
+    }
+})
 const { request } = useApi()
 const { showMessage } = useMessage()
 const emit = defineEmits(['close'])
 
 const file = ref<File | null>(null)
 const fileInput = ref<HTMLInputElement | null>(null)
+
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
 
@@ -132,7 +139,12 @@ const submit = async () => {
     formData.append('status', form.status)
     formData.append('department', form.department)
 
-    await request('/api/file/upload', { method: 'POST', body: formData })
+    if (props?.data?.uid) {
+        await request(`/api/file/${props.data.uid}`, { method: 'PUT', body: formData })
+    } else {
+        await request('/api/file/upload', { method: 'POST', body: formData })
+    }
+
     emit('close')
 }
 </script>

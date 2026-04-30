@@ -10,8 +10,8 @@ export const createFileRecord = async (data: {
   fileUrl: string;
   size: number;
 }) => {
-  const { UserFile, Files } = config.sequelize.models;
-  const file = await Files.create(data);
+  const { UserFile, Files, FileVersions } = config.sequelize.models;
+  const file = await Files.create({ ...data, version: 1 });
 
   const asset = {
     id: file.uid,
@@ -20,10 +20,62 @@ export const createFileRecord = async (data: {
   };
 
   startSystem(asset);
+  await FileVersions.create({
+    fileId: file.uid,
+    ...data,
+  });
   await UserFile.create({
     userId: data.userId,
     fileId: file.uid,
   });
+
+  return file;
+};
+
+export const updateFileRecord = async (
+  event: H3Event,
+  data: {
+    userId: string;
+    fileName: string;
+    fileType: string;
+    fileUrl: string;
+    size: number;
+  }
+) => {
+  const { id } = event.context.params!;
+  const { Files, FileVersions } = config.sequelize.models;
+
+  const file = await Files.findOne({
+    attributes: [
+      ['uid', 'fileId'],
+      'fileUrl',
+      'fileName',
+      'fileType',
+      'size',
+      'status',
+      'department',
+      'version',
+    ],
+    where: { uid: id },
+    raw: true,
+  });
+
+  if (!file)
+    throw createError({ statusCode: 404, statusMessage: 'File not found' });
+
+  await Files.update(
+    { ...data, version: file.version + 1 },
+    { where: { uid: id } }
+  );
+
+  const asset = {
+    id: file.uid,
+    fileUrl: data.fileUrl,
+    status: 'uploaded',
+  };
+
+  startSystem(asset);
+  await FileVersions.create({ ...file, userId: data.userId });
 
   return file;
 };

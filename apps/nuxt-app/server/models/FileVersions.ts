@@ -1,13 +1,13 @@
 import Sequelize from 'sequelize';
 
 export default (sequelize: any, DataTypes: any) => {
-  return Files.init(sequelize, DataTypes);
+  return FileVersions.init(sequelize, DataTypes);
 };
 
-class Files extends Sequelize.Model {
+class FileVersions extends Sequelize.Model {
   static init(sequelize: any, DataTypes: any) {
     return sequelize.define(
-      'Files',
+      'FileVersions',
       {
         uid: {
           type: DataTypes.UUID,
@@ -55,6 +55,20 @@ class Files extends Sequelize.Model {
           allowNull: false,
         },
 
+        userId: {
+          type: DataTypes.UUID,
+          allowNull: false,
+          field: 'user_id',
+          references: { model: 'users', key: 'uid' },
+        },
+
+        fileId: {
+          type: DataTypes.UUID,
+          allowNull: false,
+          field: 'file_id',
+          references: { model: 'files', key: 'uid' },
+        },
+
         createdAt: {
           type: DataTypes.DATE,
           allowNull: false,
@@ -77,7 +91,7 @@ class Files extends Sequelize.Model {
         },
       },
       {
-        tableName: 'files',
+        tableName: 'file_versions',
         timestamps: true,
         paranoid: true,
       }
