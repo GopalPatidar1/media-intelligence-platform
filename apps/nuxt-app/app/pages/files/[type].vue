@@ -15,7 +15,6 @@
                     <th>Size (KB)</th>
                     <th>Uploaded Date</th>
                     <th>Status</th>
-                    <th>View</th>
                     <th>Action Button</th>
                 </tr>
             </thead>
@@ -36,8 +35,7 @@
                     <td>{{ capitalizeWords(file.status) }}</td>
                     <td>
                         <button class="view-btn" @click="() => viewFile(file.uid)">View</button>
-                    </td>
-                    <td>
+                        <button class="view-btn" @click="() => updateFile(file)">Update</button>
                         <button class="view-btn" @click="() => deleteFile(file.uid)">Delete</button>
                     </td>
                 </tr>
@@ -46,6 +44,8 @@
 
         <p v-if="fileStore.loading">{{ searchText ? "Searching assets..." : "Loading assets..." }}</p>
         <p v-if="fileStore.error" class="error">{{ fileStore.error }}</p>
+
+        <UploadModal :data="fileUpload" v-if="!!fileUpload.uid" @close="updateFile" />
     </div>
 </template>
 
@@ -54,6 +54,7 @@ import { useConfirm } from "@/composables/useConfirm"
 import { useMessage } from "@/composables/useMessage"
 import { useFileTypeStore } from '@/stores/fileTypeStore'
 const fileStore = useFileTypeStore()
+const fileUpload = reactive<any>({})
 export type FileType = 'image' | 'video' | 'document' | 'audio';
 const { confirm } = useConfirm()
 const { showMessage } = useMessage()
@@ -61,6 +62,17 @@ const router = useRouter()
 const route = useRoute();
 const type = computed(() => route.params.type as FileType)
 const searchText = ref<string>("")
+
+
+const updateFile = async (file: any) => {
+    if (fileUpload.uid) {
+        for (const key in fileUpload) {
+            delete fileUpload[key]
+        }
+    } else if (file.uid) {
+        Object.assign(fileUpload, file)
+    }
+}
 
 const deleteFile = async (uid: string) => {
     const confirmed = await confirm({ message: "Are you sure you want to delete this file?" });
