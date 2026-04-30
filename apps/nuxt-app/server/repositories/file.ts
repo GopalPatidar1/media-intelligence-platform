@@ -74,6 +74,23 @@ export const getFilesByType = async (
   });
 };
 
+export const getFileByUid = async (event: H3Event) => {
+  const { id: uid } = event.context.params!;
+  const { Files } = config.sequelize.models;
+  return await Files.findOne({
+    include: [
+      {
+        association: 'userFile',
+        attributes: [],
+        where: { userId: event.context.user.uid },
+      },
+    ],
+    where: { uid: uid },
+    raw: true,
+    nest: true,
+  });
+};
+
 export const deleteFileByIdRepo = async (id: string) => {
   const { Files, UserFile } = config.sequelize.models;
 

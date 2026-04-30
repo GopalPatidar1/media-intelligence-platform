@@ -28,6 +28,12 @@ export const useFileTypeStore = defineStore('fileTypeStore', {
   },
 
   actions: {
+    async getFileByUid(uid: string): Promise<FileItem | null> {
+      const { request } = useApi();
+      const res = await request(`/api/file/${uid}`);
+      return res.data;
+    },
+
     async fetchFiles(
       type: FileType,
       searchText: string = '',

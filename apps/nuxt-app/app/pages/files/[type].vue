@@ -15,6 +15,7 @@
                     <th>Size (KB)</th>
                     <th>Uploaded Date</th>
                     <th>Status</th>
+                    <th>View</th>
                     <th>Action Button</th>
                 </tr>
             </thead>
@@ -33,6 +34,9 @@
                     <td>{{ formatSize(file.size) }}</td>
                     <td>{{ formatDate(file.createdAt) }}</td>
                     <td>{{ capitalizeWords(file.status) }}</td>
+                    <td>
+                        <button class="view-btn" @click="() => viewFile(file.uid)">View</button>
+                    </td>
                     <td>
                         <button class="view-btn" @click="() => deleteFile(file.uid)">Delete</button>
                     </td>
@@ -64,6 +68,10 @@ const deleteFile = async (uid: string) => {
     await fileStore.deleteFile(type.value, uid)
     showMessage("File deleted successfully");
 
+}
+
+const viewFile = async (uid: string) => {
+    window.open(`/api/file/${uid}`, '_blank');
 }
 
 const files = computed(() =>
