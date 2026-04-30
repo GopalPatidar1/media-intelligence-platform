@@ -3,8 +3,6 @@ import config from '../config';
 
 export default defineEventHandler(async (event) => {
   const publisRoutes = ['/login', '/register'];
-  console.log("🚀 ~ publisRoutes:", publisRoutes)
-
   const path = event.path;
 
   const isPublicRoute = publisRoutes.some((route) => path.includes(route));

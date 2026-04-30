@@ -1,11 +1,12 @@
 import type { H3Event } from 'h3';
 import { getMinioClient } from '@@/server/utils/minio';
-import { FILE_TYPE_MAP } from '@@/server/utils/constants';
+import { FILE_TYPE_MAP, MIME_MAP } from '@@/server/utils/constants';
 import {
   createFileRecord,
   getFileStatsByType,
   getFilesByType,
   deleteFileByIdRepo,
+  getFileByUid,
 } from '../repositories/file';
 import { FileForm } from '@@/server/types/file';
 
@@ -13,6 +14,31 @@ const BUCKET = 'uploads';
 
 export const fetchFileStatsByType = async (event: H3Event) => {
   return await getFileStatsByType(event);
+};
+
+export const fetchFileByUid = async (event: H3Event) => {
+  const data = await getFileByUid(event);
+
+  const stream = await getMinioClient().getObject(
+    BUCKET,
+    data.fileUrl.replace(`${BUCKET}/`, '')
+  );
+  const typeInfo = data?.fileType ? MIME_MAP[data.fileType] : undefined;
+
+  if (!data || !typeInfo) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'File type not found',
+    });
+  }
+  setHeader(event, 'Content-Type', typeInfo.mime);
+  setHeader(
+    event,
+    'Content-Disposition',
+    `inline; filename="${data.fileName}.${typeInfo.ext}"`
+  );
+
+  return sendStream(event, stream);
 };
 
 export const fetchFilesByType = async (
