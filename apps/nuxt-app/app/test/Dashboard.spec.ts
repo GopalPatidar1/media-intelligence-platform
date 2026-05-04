@@ -1,15 +1,12 @@
 import { mount } from '@vue/test-utils';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { setActivePinia, createPinia } from 'pinia';
 import Login from '~/pages/dashboard.vue';
-
-const mockNavigate = vi.fn();
-vi.mock('#app', () => ({
-  navigateTo: mockNavigate,
-}));
 
 describe('Dashboard Component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    setActivePinia(createPinia());
   });
 
   it('renders login form', () => {

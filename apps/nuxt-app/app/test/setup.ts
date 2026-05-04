@@ -9,3 +9,10 @@ vi.mock('~/composables/useApi', () => ({
     error: null,
   }),
 }));
+
+vi.mock('#app', () => ({
+  navigateTo: vi.fn(),
+  useState: (key: string, init: any) => ({
+    value: typeof init === 'function' ? init() : init,
+  }),
+}));
