@@ -1,3 +1,4 @@
+import { useState } from '#app';
 export const useMessage = () => {
   const message = useState<string | null>('global-message', () => null);
   const type = useState<'success' | 'error'>('message-type', () => 'success');

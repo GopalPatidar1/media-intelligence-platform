@@ -1,13 +1,12 @@
 import { mount } from '@vue/test-utils';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import UploadModal from '~/components/UploadModal.vue';
-
-const mockNavigate = vi.fn();
-vi.mock('#app', () => ({
-  navigateTo: mockNavigate,
-}));
+import { setActivePinia, createPinia } from 'pinia';
 
 describe('UploadModal', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia());
+  });
   it('renders modal title', () => {
     const wrapper = mount(UploadModal);
 

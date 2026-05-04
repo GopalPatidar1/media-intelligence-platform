@@ -1,15 +1,12 @@
 import { mount } from '@vue/test-utils';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { setActivePinia, createPinia } from 'pinia';
 import AppHeader from '~/components/AppHeader.vue';
-
-const mockNavigate = vi.fn();
-vi.mock('#app', () => ({
-  navigateTo: mockNavigate,
-}));
 
 describe('Header Component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    setActivePinia(createPinia());
   });
 
   it('renders AppHeader form', () => {
