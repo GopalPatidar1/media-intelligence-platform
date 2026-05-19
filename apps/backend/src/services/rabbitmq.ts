@@ -1,5 +1,5 @@
 import amqp from 'amqplib';
-import config from '@@/server/config';
+import config from '../config';
 
 const RABBITMQ_USER = config.rabbitmqUser;
 const RABBITMQ_PASS = config.rabbitmqPass;

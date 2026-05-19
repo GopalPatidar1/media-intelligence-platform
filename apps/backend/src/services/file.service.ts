@@ -1,6 +1,5 @@
-import { H3Event } from 'h3';
-import { getMinioClient } from '@@/server/utils/minio';
-import { FILE_TYPE_MAP, MIME_MAP } from '@@/server/utils/constants';
+import { getMinioClient } from '../utils/minio';
+import { FILE_TYPE_MAP, MIME_MAP } from '../utils/constants';
 import {
   createFileRecord,
   getFileStatsByType,
@@ -9,16 +8,26 @@ import {
   getFileByUid,
   updateFileRecord,
 } from '../repositories/file';
-import { FileForm } from '@@/server/types/file';
+import { FileForm } from '../types/file';
+import createError from 'http-errors';
+import { Request, Response, NextFunction } from 'express';
 
 const BUCKET = 'uploads';
 
-export const fetchFileStatsByType = async (event: H3Event) => {
-  return await getFileStatsByType(event);
+export const fetchFileStatsByType = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  return await getFileStatsByType(req);
 };
 
-export const fetchFileByUid = async (event: H3Event) => {
-  const data = await getFileByUid(event);
+export const fetchFileByUid = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const data = await getFileByUid(req);
 
   const stream = await getMinioClient().getObject(
     BUCKET,
@@ -27,27 +36,27 @@ export const fetchFileByUid = async (event: H3Event) => {
   const typeInfo = data?.fileType ? MIME_MAP[data.fileType] : undefined;
 
   if (!data || !typeInfo) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'File type not found',
-    });
+    return next(
+      createError({
+        statusCode: 400,
+        statusMessage: 'File type not found',
+      })
+    );
   }
-  setHeader(event, 'Content-Type', typeInfo.mime);
-  setHeader(
-    event,
+  res.setHeader('Content-Type', typeInfo.mime);
+  res.setHeader(
     'Content-Disposition',
     `inline; filename="${data.fileName}.${typeInfo.ext}"`
   );
-
-  return sendStream(event, stream);
+  stream.pipe(res);
 };
 
 export const fetchFilesByType = async (
-  event: H3Event,
+  req: Request,
   type: string,
   where: { fileName?: string }
 ) => {
-  return await getFilesByType(event, type, where);
+  return await getFilesByType(req, type, where);
 };
 
 export const deleteFileById = async (id: string) => {
@@ -88,7 +97,7 @@ const validateFileType = async (file: any, payload: FileForm) => {
 export const uploadFileService = async (
   file: any,
   payload: FileForm,
-  event: H3Event
+  req: Request
 ) => {
   const { fileType, fileName, path, size } = await validateFileType(
     file,
@@ -96,7 +105,7 @@ export const uploadFileService = async (
   );
 
   await createFileRecord({
-    userId: event.context.user.uid,
+    userId: req.context.user.uid,
     fileType,
     fileUrl: path,
     size,
@@ -110,18 +119,14 @@ export const uploadFileService = async (
   };
 };
 
-export const updateFileByUid = async (
-  event: H3Event,
-  file: any,
-  payload: FileForm
-) => {
+export const updateFileByUid = async (req, file: any, payload: FileForm) => {
   const { fileType, fileName, path, size } = await validateFileType(
     file,
     payload
   );
 
-  await updateFileRecord(event, {
-    userId: event.context.user.uid,
+  await updateFileRecord(req, {
+    userId: req.context.user.uid,
     fileType,
     fileUrl: path,
     size,

@@ -1,10 +1,11 @@
-import config from '@@/server/config';
+import config from 'config';
 import jsonwebtoken from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { fetchUserByEmail, createUser } from '@@/server/repositories/user';
+import { Response } from 'express';
+import { fetchUserByEmail, createUser } from '../../repositories/user';
 
 const generateTokon = (
-  event: any,
+  res: Response,
   userInfo: { email: string; uid: string }
 ) => {
   const secret = config.jwtSecret;
@@ -19,14 +20,15 @@ const generateTokon = (
     { algorithm: 'HS256', expiresIn: '1h' }
   );
 
-  setCookie(event, 'authToken', token, {
+  res.cookie('authToken', token, {
     httpOnly: true,
     secure: false,
     sameSite: 'lax',
     path: '/',
     maxAge: 60 * 60,
   });
-  setCookie(event, 'authenticated', 'true', {
+
+  res.cookie('authenticated', {
     httpOnly: false,
     secure: false,
     sameSite: 'lax',
@@ -38,7 +40,7 @@ const generateTokon = (
 };
 
 export const registerService = async (
-  event: any,
+  res: Response,
   payload: {
     email: string;
     password: string;
@@ -47,11 +49,11 @@ export const registerService = async (
 ) => {
   const user = await createUser(payload);
 
-  return generateTokon(event, { uid: user.uid, email: payload.email });
+  return generateTokon(res, { uid: user.uid, email: payload.email });
 };
 
 export const loginService = async (
-  event: any,
+  res: Response,
   payload: {
     email: string;
     password: string;
@@ -60,15 +62,13 @@ export const loginService = async (
   const userInfo = await fetchUserByEmail(payload.email);
 
   if (!userInfo) {
-    setResponseStatus(event, 404);
-    return { message: 'User Not Found' };
+    return res.status(404).json({ message: 'User Not Found' });
   }
 
   const pass = bcrypt.compareSync(payload.password, userInfo.password);
 
   if (!pass) {
-    setResponseStatus(event, 401);
-    return { message: 'wrong password' };
+    return res.status(401).json({ message: 'wrong password' });
   }
-  return generateTokon(event, { uid: userInfo.uid, email: userInfo.email });
+  return generateTokon(res, { uid: userInfo.uid, email: userInfo.email });
 };

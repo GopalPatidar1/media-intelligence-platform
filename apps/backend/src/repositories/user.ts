@@ -1,7 +1,7 @@
-import config from '../config';
+import config from 'config';
+const { Users } = config.sequelize.models;
 
 export const fetchUserByEmail = async (email: string) => {
-  const { Users } = config.sequelize.models;
   return await Users.findOne({ where: { email }, raw: true });
 };
 
@@ -10,6 +10,5 @@ export const createUser = async (payload: {
   password: string;
   name: string;
 }) => {
-  const { Users } = config.sequelize.models;
   return await Users.create(payload);
 };

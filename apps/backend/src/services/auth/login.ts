@@ -1,10 +1,11 @@
-import config from '@@/server/config';
+import config from 'config';
 import jsonwebtoken from 'jsonwebtoken';
+import { Response } from 'express';
 import bcrypt from 'bcryptjs';
-import { fetchUserByEmail } from '@@/server/repositories/user';
+import { fetchUserByEmail } from '..//../repositories/user';
 
 export const loginService = async (
-  event: any,
+  res: Response,
   payload: {
     email: string;
     password: string;
@@ -13,14 +14,14 @@ export const loginService = async (
   const userInfo = await fetchUserByEmail(payload.email);
 
   if (!userInfo) {
-    setResponseStatus(event, 404);
+    // setResponseStatus(event, 404);
     return { message: 'User Not Found' };
   }
 
   const pass = bcrypt.compareSync(payload.password, userInfo.password);
 
   if (!pass) {
-    setResponseStatus(event, 401);
+    // setResponseStatus(event, 401);
     return { message: 'wrong password' };
   }
   const secret = config.jwtSecret;
@@ -35,14 +36,15 @@ export const loginService = async (
     { algorithm: 'HS256', expiresIn: '1h' }
   );
 
-  setCookie(event, 'authToken', token, {
+  res.cookie('authToken', token, {
     httpOnly: true,
     secure: false,
     sameSite: 'lax',
     path: '/',
     maxAge: 60 * 60,
   });
-  setCookie(event, 'authenticated', 'true', {
+
+  res.cookie('authenticated', {
     httpOnly: false,
     secure: false,
     sameSite: 'lax',
