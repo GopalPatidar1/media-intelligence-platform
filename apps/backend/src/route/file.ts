@@ -8,6 +8,9 @@ import {
   updateFileByUid,
 } from '../services/file.service';
 import { FileForm } from '../types/file';
+import createHttpError from 'http-errors';
+import multer from 'multer';
+const upload = multer();
 
 const router = express.Router();
 
@@ -34,7 +37,8 @@ export const updateFileByUidRoute = async (
   next: NextFunction
 ) => {
   const files = req.files as any[];
-  if (!files || files.length === 0) return { error: 'No file uploaded' };
+  if (!files || files.length === 0)
+    return next(createHttpError(400, { error: 'No file uploaded' }));
 
   const payload: FileForm = {
     fileName: '',
@@ -55,7 +59,7 @@ export const updateFileByUidRoute = async (
     }
   }
 
-  return await updateFileByUid(req, files[0], payload);
+  return await updateFileByUid(req, files[0], payload, next);
 };
 
 export const fetchFileStatsByTypeRoute = async (
@@ -82,7 +86,8 @@ export const uploadFileRoute = async (
   next: NextFunction
 ) => {
   const files = req.files as any[];
-  if (!files || files.length === 0) return { error: 'No file uploaded' };
+  if (!files || files.length === 0)
+    return next(createHttpError(400, { error: 'No file uploaded' }));
 
   const payload: FileForm = {
     fileName: '',
@@ -108,7 +113,7 @@ export const uploadFileRoute = async (
 
 router.get('/', fetchFileStatsByTypeRoute);
 router.get('/:uid', fetchFileByUidRoute);
-router.post('/upload', uploadFileRoute);
+router.post('/upload', upload.single('file'), uploadFileRoute);
 router.put('/:uid', updateFileByUidRoute);
 router.delete('/:id', deleteFileByIdRoute);
 

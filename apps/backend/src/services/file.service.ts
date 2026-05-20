@@ -104,6 +104,8 @@ export const uploadFileService = async (
     payload
   );
 
+  if (!req.context || !req.context.user || !req.context.user.uid) return false;
+
   await createFileRecord({
     userId: req.context.user.uid,
     fileType,
@@ -119,19 +121,29 @@ export const uploadFileService = async (
   };
 };
 
-export const updateFileByUid = async (req, file: any, payload: FileForm) => {
+export const updateFileByUid = async (
+  req: Request,
+  file: any,
+  payload: FileForm,
+  next: NextFunction
+) => {
   const { fileType, fileName, path, size } = await validateFileType(
     file,
     payload
   );
+  if (!req.context || !req.context.user || !req.context.user.uid) return false;
 
-  await updateFileRecord(req, {
-    userId: req.context.user.uid,
-    fileType,
-    fileUrl: path,
-    size,
-    ...payload,
-  });
+  await updateFileRecord(
+    req,
+    {
+      userId: req.context.user.uid,
+      fileType,
+      fileUrl: path,
+      size,
+      ...payload,
+    },
+    next
+  );
 
   return {
     statusMessage: 'File updated successfully',

@@ -7,9 +7,9 @@ const RABBIT_URL = `amqp://${RABBITMQ_USER}:${encodeURIComponent(RABBITMQ_PASS!)
 const EXCHANGE = 'asset.exchange';
 
 // COMMON CONNECTIONS
-let connection: amqp.Connection;
-let aiChannel: amqp.Channel;
-let approvalChannel: amqp.Channel;
+let connection: any;
+let aiChannel: any;
+let approvalChannel: any;
 
 // INIT CONNECTION
 const initRabbit = async () => {

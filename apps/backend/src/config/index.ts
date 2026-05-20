@@ -3,8 +3,8 @@ export const config = {
   env: process.env.NODE_ENV || 'development',
   jwtSecret: process.env.JWT_SECRET,
 
-  rabbitmqUser: process.env.RABBITMQ_USER,
-  rabbitmqPass: process.env.RABBITMQ_PASS,
+  rabbitmqUser: process.env.RABBITMQ_USER || "admin",
+  rabbitmqPass: process.env.RABBITMQ_PASS || "password",
 
   db: {
     name: 'media_intelligence',

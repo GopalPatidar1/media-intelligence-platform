@@ -1,7 +1,7 @@
 import { Response, NextFunction, Request } from 'express';
 import createError from 'http-errors';
 import jwt from 'jsonwebtoken';
-import config from 'config';
+import config from '../config';
 
 export const jwtToken = async (
   req: Request,
@@ -27,7 +27,7 @@ export const jwtToken = async (
       email: string;
     };
 
-    req.context ??= {};
+    // req.context ??= {};
     req.context.user = { uid: decoded.uid, email: decoded.email };
   } catch {
     return next(

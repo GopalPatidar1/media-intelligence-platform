@@ -1,7 +1,9 @@
 import jwt from 'jsonwebtoken';
 import config from '../config';
+import { Request, Response, NextFunction } from 'express';
+import createHttpError from 'http-errors';
 
-export default auth(async (req, res, next) => {
+export default async (req: Request, res: Response, next: NextFunction) => {
   const publisRoutes = ['/login', '/register'];
 
   const path = req.path;
@@ -10,7 +12,7 @@ export default auth(async (req, res, next) => {
 
   if (isPublicRoute || !path.includes('/api')) return;
 
-  const token = getCookie(req, 'authToken');
+  const token = req.cookies?.authToken;
 
   if (!token || !config.jwtSecret) {
     return { success: false, message: 'Invalid token' };
@@ -23,9 +25,10 @@ export default auth(async (req, res, next) => {
 
     req.context.user = { uid: decoded.uid, email: decoded.email };
   } catch {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Invalid or expired token',
-    });
+    return next(
+      createHttpError(401, {
+        statusMessage: 'Invalid or expired token',
+      })
+    );
   }
-});
+};

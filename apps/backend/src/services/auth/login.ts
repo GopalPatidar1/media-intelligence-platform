@@ -1,28 +1,26 @@
-import config from 'config';
+import config from '../../config/index';
 import jsonwebtoken from 'jsonwebtoken';
-import { Response } from 'express';
+import { NextFunction, Response, Request } from 'express';
 import bcrypt from 'bcryptjs';
 import { fetchUserByEmail } from '..//../repositories/user';
+import createHttpError from 'http-errors';
 
 export const loginService = async (
+  req: Request,
   res: Response,
-  payload: {
-    email: string;
-    password: string;
-  }
+  next: NextFunction
 ) => {
+  const payload: any = req.body;
   const userInfo = await fetchUserByEmail(payload.email);
 
   if (!userInfo) {
-    // setResponseStatus(event, 404);
-    return { message: 'User Not Found' };
+    return next(createHttpError(404, { message: 'User Not Found' }));
   }
 
   const pass = bcrypt.compareSync(payload.password, userInfo.password);
 
   if (!pass) {
-    // setResponseStatus(event, 401);
-    return { message: 'wrong password' };
+    return next(createHttpError(401, { message: 'Wrong password' }));
   }
   const secret = config.jwtSecret;
 

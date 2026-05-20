@@ -1,7 +1,7 @@
-import config from 'config';
+import config from '../../config/index';
 import jsonwebtoken from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { Response } from 'express';
+import { Response, NextFunction, Request } from 'express';
 import { fetchUserByEmail, createUser } from '../../repositories/user';
 
 const generateTokon = (
@@ -40,16 +40,13 @@ const generateTokon = (
 };
 
 export const registerService = async (
+  req: Request,
   res: Response,
-  payload: {
-    email: string;
-    password: string;
-    name: string;
-  }
+  next: NextFunction
 ) => {
-  const user = await createUser(payload);
+  const user = await createUser(req, res, next);
 
-  return generateTokon(res, { uid: user.uid, email: payload.email });
+  return generateTokon(res, { uid: user.uid, email: req.body.email });
 };
 
 export const loginService = async (

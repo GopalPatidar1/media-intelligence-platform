@@ -1,5 +1,6 @@
-import type { H3Event } from 'h3';
 import { Sequelize, Op } from 'sequelize';
+import { NextFunction, Request } from 'express';
+import createError from 'http-errors';
 import config from '../config';
 import { startSystem } from '../services/rabbitmq';
 
@@ -33,16 +34,17 @@ export const createFileRecord = async (data: {
 };
 
 export const updateFileRecord = async (
-  event: H3Event,
+  req: Request,
   data: {
     userId: string;
     fileName: string;
     fileType: string;
     fileUrl: string;
     size: number;
-  }
+  },
+  next: NextFunction
 ) => {
-  const { id } = event.context.params!;
+  const { id } = req.params!;
   const { Files, FileVersions } = config.sequelize.models;
 
   const file = await Files.findOne({
@@ -61,7 +63,9 @@ export const updateFileRecord = async (
   });
 
   if (!file)
-    throw createError({ statusCode: 404, statusMessage: 'File not found' });
+    return next(
+      createError(404, { statusCode: 404, statusMessage: 'File not found' })
+    );
 
   await Files.update(
     { ...data, version: file.version + 1 },
@@ -80,14 +84,16 @@ export const updateFileRecord = async (
   return file;
 };
 
-export const getFileStatsByType = async (event: H3Event) => {
+export const getFileStatsByType = async (req: Request) => {
   const { Files } = config.sequelize.models;
+  if (!req.context || !req.context.user || !req.context.user.uid) return false;
+
   return await Files.findAll({
     include: [
       {
         association: 'userFile',
         attributes: [],
-        where: { userId: event.context.user.uid },
+        where: { userId: req.context.user.uid },
       },
     ],
     attributes: [
@@ -103,17 +109,19 @@ export const getFileStatsByType = async (event: H3Event) => {
 };
 
 export const getFilesByType = async (
-  event: H3Event,
+  req: Request,
   type: string,
   where: { fileName?: string }
 ) => {
   const { Files } = config.sequelize.models;
+  if (!req.context || !req.context.user || !req.context.user.uid) return false;
+
   return await Files.findAll({
     include: [
       {
         association: 'userFile',
         attributes: [],
-        where: { userId: event.context.user.uid },
+        where: { userId: req.context.user.uid },
       },
     ],
     where: {
@@ -126,15 +134,17 @@ export const getFilesByType = async (
   });
 };
 
-export const getFileByUid = async (event: H3Event) => {
-  const { id: uid } = event.context.params!;
+export const getFileByUid = async (req: Request) => {
+  const { id: uid } = req.params!;
   const { Files } = config.sequelize.models;
+  if (!req.context || !req.context.user || !req.context.user.uid) return false;
+
   return await Files.findOne({
     include: [
       {
         association: 'userFile',
         attributes: [],
-        where: { userId: event.context.user.uid },
+        where: { userId: req.context.user.uid },
       },
     ],
     where: { uid: uid },

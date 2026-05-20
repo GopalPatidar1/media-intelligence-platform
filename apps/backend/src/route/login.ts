@@ -17,8 +17,8 @@ export const logout = async (
   res: Response,
   next: NextFunction
 ) => {
-  //   deleteCookie(req, res, 'authToken');
-  //   deleteCookie(req, res, 'authenticated');
+  res.clearCookie('authToken');
+  res.clearCookie('authenticated');
   return { success: true };
 };
 
