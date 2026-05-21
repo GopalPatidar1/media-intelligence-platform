@@ -1,30 +1,10 @@
-import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
 
 export const authGuard: CanActivateFn = () => {
   const router = inject(Router);
 
-  // check token from cookies
-  const token = getCookie('authenticated');
+  const isLoggedIn = document.cookie.includes('authenticated=true');
 
-  if (token) {
-    return true;
-  }
-
-  return router.createUrlTree(['/login']);
+  return isLoggedIn ? true : router.createUrlTree(['/login']);
 };
-
-// helper function
-function getCookie(name: string): string | null {
-  const cookies = document.cookie.split(';');
-
-  for (let cookie of cookies) {
-    const [key, value] = cookie.trim().split('=');
-
-    if (key === name) {
-      return value;
-    }
-  }
-
-  return null;
-}

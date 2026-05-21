@@ -1,15 +1,13 @@
-import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
 
 export const guestGuard: CanActivateFn = () => {
   const router = inject(Router);
 
   const isLoggedIn = document.cookie.includes('authenticated=true');
+  console.log("🚀 ~ guestGuard ~ isLoggedIn:", isLoggedIn)
 
-  if (isLoggedIn) {
-    router.navigate(['/dashboard']);
-    return false;
-  }
-
-  return true;
+  return isLoggedIn
+    ? router.createUrlTree(['/dashboard'])
+    : true;
 };
