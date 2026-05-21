@@ -12,7 +12,6 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-
 export class LoginComponent {
   loginForm: FormGroup;
 
@@ -39,7 +38,9 @@ export class LoginComponent {
     this.error = '';
 
     try {
-      const response = await this.http.post('/api/auth/login', this.loginForm.value).toPromise();
+      const response = await this.http
+        .post('http://localhost:3000/api/auth/login', this.loginForm.value)
+        .toPromise();
 
       console.log(response);
 

@@ -12,5 +12,6 @@ export const createUser = async (
   next: NextFunction
 ) => {
   const payload: any = req.body;
+  console.log('🚀 ~ createUser ~ payload:', payload);
   return await Users.create(payload);
 };

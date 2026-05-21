@@ -50,5 +50,5 @@ export const loginService = async (
     maxAge: 60 * 60,
   });
 
-  return { success: true };
+  return res.status(200).json({ success: true });
 };

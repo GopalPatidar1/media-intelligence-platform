@@ -36,7 +36,7 @@ const generateTokon = (
     maxAge: 60 * 60,
   });
 
-  return { success: true };
+  return res.sendStatus(200);
 };
 
 export const registerService = async (
@@ -45,6 +45,7 @@ export const registerService = async (
   next: NextFunction
 ) => {
   const user = await createUser(req, res, next);
+  console.log('🚀 ~ registerService ~ user:', user);
 
   return generateTokon(res, { uid: user.uid, email: req.body.email });
 };

@@ -36,7 +36,9 @@ export class Register {
     this.error = '';
 
     try {
-      await this.http.post('/api/auth/register', this.registerForm.value).toPromise();
+      await this.http
+        .post('http://localhost:3000/api/auth/register', this.registerForm.value)
+        .toPromise();
 
       await this.router.navigate(['/login']);
     } catch (err: any) {
