@@ -39,11 +39,14 @@ export class LoginComponent {
 
     try {
       const response = await this.http
-        .post('http://localhost:3000/api/auth/login', this.loginForm.value)
+        .post('http://localhost:3002/api/auth/login', this.loginForm.value, {
+          withCredentials: true,
+        })
         .toPromise();
 
       console.log(response);
 
+      this.loading = false;
       this.router.navigate(['/dashboard']);
     } catch (err: any) {
       this.error = err?.error?.message || 'Login failed';
