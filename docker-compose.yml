@@ -18,6 +18,9 @@ services:
       context: ./apps/nuxt-app
       dockerfile: dockerfile
     container_name: nuxt
+    depends_on:
+      - rabbitmq
+      - minio
     ports:
       - "3000:3000"
     volumes:
@@ -33,6 +36,9 @@ services:
       context: ./apps/backend
       dockerfile: dockerfile
     container_name: backend
+    depends_on:
+      - rabbitmq
+      - minio
     ports:
       - "3002:3002"
     volumes:
@@ -49,7 +55,7 @@ services:
       dockerfile: dockerfile
     container_name: angular
     ports:
-      - "4002:4002"
+      - "4200:4200"
     volumes:
       - ./apps/angular-app:/app
       - /app/node_modules
@@ -65,8 +71,7 @@ services:
       - "5672:5672" # App connection (AMQP)
       - "15672:15672" # Web UI
     environment:
-      RABBITMQ_DEFAULT_USER: ${
-      }
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
