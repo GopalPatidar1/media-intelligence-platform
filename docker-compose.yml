@@ -51,13 +51,13 @@ services:
 
   frontend_angular:
     build:
-      context: ./apps/angular-app
+      context: ./apps/angular
       dockerfile: dockerfile
     container_name: angular
     ports:
       - "4200:4200"
     volumes:
-      - ./apps/angular-app:/app
+      - ./apps/angular:/app
       - /app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true

@@ -39,15 +39,15 @@ export const loginService = async (
     secure: false,
     sameSite: 'lax',
     path: '/',
-    maxAge: 60 * 60,
+    maxAge: 60 * 60 * 1000,
   });
 
-  res.cookie('authenticated', {
+  res.cookie('authenticated', true, {
     httpOnly: false,
     secure: false,
     sameSite: 'lax',
     path: '/',
-    maxAge: 60 * 60,
+    maxAge: 60 * 60 * 1000,
   });
 
   return res.status(200).json({ success: true });

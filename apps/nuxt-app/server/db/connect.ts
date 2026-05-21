@@ -4,7 +4,7 @@ import initModels from "../models/initModel";
 
 export const connectDB = async () => {
   config.sequelize = new Sequelize("media_intelligence", "postgres", "mindfire", {
-    host: "10.63.25.105",
+    host: "10.132.12.105",
     port: 5432,
     ssl: false,
     dialect: "postgres",
