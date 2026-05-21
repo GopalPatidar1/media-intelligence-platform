@@ -18,6 +18,9 @@ services:
       context: ./apps/nuxt-app
       dockerfile: dockerfile
     container_name: nuxt
+    depends_on:
+      - rabbitmq
+      - minio
     ports:
       - "3000:3000"
     volumes:
@@ -27,6 +30,39 @@ services:
       - CHOKIDAR_USEPOLLING=true
     working_dir: /app
     command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+
+  backend:
+    build:
+      context: ./apps/backend
+      dockerfile: dockerfile
+    container_name: backend
+    depends_on:
+      - rabbitmq
+      - minio
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./apps/backend:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+
+  frontend_angular:
+    build:
+      context: ./apps/angular-app
+      dockerfile: dockerfile
+    container_name: angular
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./apps/angular-app:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    working_dir: /app
+    command: sh -c "npm install && npm run start -- --host 0.0.0.0"
 
   rabbitmq:
     image: rabbitmq:3-management
