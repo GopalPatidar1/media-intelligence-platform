@@ -9,10 +9,10 @@ export const config = {
   rabbitmqPass: process.env.RABBITMQ_PASS || 'password',
 
   db: {
-    name: 'media_intelligence',
-    user: 'postgres',
-    password: '',
-    host: 'localhost',
+    name: process.env.DB_NAME,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    host: process.env.DB_HOST,
     port: 5432,
   },
 
