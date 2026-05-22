@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 
 import { Router, RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -38,13 +39,11 @@ export class LoginComponent {
     this.error = '';
 
     try {
-      const response = await this.http
-        .post('http://localhost:3002/api/auth/login', this.loginForm.value, {
+      await firstValueFrom(
+        this.http.post('http://localhost:3002/api/auth/login', this.loginForm.value, {
           withCredentials: true,
-        })
-        .toPromise();
-
-      console.log(response);
+        }),
+      );
 
       this.loading = false;
       this.router.navigate(['/dashboard']);

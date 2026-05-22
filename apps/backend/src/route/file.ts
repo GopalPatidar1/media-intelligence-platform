@@ -74,17 +74,23 @@ export const fetchFileStatsByTypeRoute = async (
   res: Response,
   next: NextFunction
 ) => {
-  const query = req.query;
-  const { type, where } = query;
-  let parseWhere: { fileName?: string } = {};
-  if (typeof where === 'string') {
-    parseWhere = where ? JSON.parse(where) : {};
+  try {
+    const query = req.query;
+    const { type, search } = query;
+    let parseWhere: { fileName?: string } = {};
+    if (typeof search === 'string') {
+      parseWhere = search ? { fileName: search } : {};
+    }
+    let data;
+    if (type) {
+      data = await fetchFilesByType(req, type as string, parseWhere);
+    } else data = await fetchFileStatsByType(req, res, next);
+    return res.status(200).json(data);
+  } catch (err: any) {
+    return next(
+      createHttpError(400, { message: err.message || 'something went wrong' })
+    );
   }
-  let data;
-  if (type) {
-    data = await fetchFilesByType(req, type as string, parseWhere);
-  } else data = await fetchFileStatsByType(req, res, next);
-  return res.status(200).json(data);
 };
 
 export const uploadFileRoute = async (

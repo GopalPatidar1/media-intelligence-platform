@@ -46,7 +46,7 @@
 
           <button class="view-btn" (click)="updateFile(file)">Update</button>
 
-          <button class="view-btn" (click)="deleteFile(file.uid)">Delete</button>
+          <button class="view-btn" (click)="openDeleteModal(file.uid)">Delete</button>
         </td>
       </tr>
     </tbody>
@@ -59,4 +59,13 @@
   <p *ngIf="error" class="error">
     {{ error }}
   </p>
+
+  <app-confirm-modal
+    [isOpen]="isModalOpen"
+    [title]="modalTitle"
+    [message]="modalMessage"
+    [accept]="onAccept"
+    [cancel]="onCancel"
+  >
+  </app-confirm-modal>
 </div>
