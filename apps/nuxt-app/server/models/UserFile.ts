@@ -66,13 +66,11 @@ class UserFile extends Sequelize.Model {
           },
           {
             name: 'userId',
-            unique: true,
             using: 'BTREE',
             fields: [{ name: 'user_id' }],
           },
           {
             name: 'fileId',
-            unique: true,
             using: 'BTREE',
             fields: [{ name: 'file_id' }],
           },

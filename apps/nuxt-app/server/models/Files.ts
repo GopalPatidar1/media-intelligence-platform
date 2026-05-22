@@ -85,7 +85,7 @@ class Files extends Sequelize.Model {
             name: 'PRIMARY',
             unique: true,
             using: 'BTREE',
-            fields: [{ name: 'id' }],
+            fields: [{ name: 'uid' }],
           },
         ],
       }

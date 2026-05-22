@@ -23,7 +23,7 @@ export const connectDB = async () => {
   try {
     await config.sequelize.authenticate();
     initModels(config.sequelize);
-    await config.sequelize.sync({ alter: true });
+    // await config.sequelize.sync({ alter: true });
     console.log('✅ PostgreSQL connected');
   } catch (error) {
     console.error('❌ DB connection failed:', error);

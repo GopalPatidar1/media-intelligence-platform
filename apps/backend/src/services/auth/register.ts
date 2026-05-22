@@ -44,10 +44,15 @@ export const registerService = async (
   res: Response,
   next: NextFunction
 ) => {
-  const user = await createUser(req, res, next);
-  console.log('🚀 ~ registerService ~ user:', user);
-
-  return generateTokon(res, { uid: user.uid, email: req.body.email });
+  try {
+    const user = await createUser(req);
+    return generateTokon(res, { uid: user.uid, email: req.body.email });
+  } catch (error: any) {
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      return res.status(400).json({ message: 'Email already exists' });
+    }
+    return next(error);
+  }
 };
 
 export const loginService = async (
