@@ -30,14 +30,6 @@
                 <!-- Name -->
                 <input v-model="form.name" placeholder="Asset Name" />
 
-                <!-- 
-                <select v-model="form.type" disabled="true">
-                    <option value="">Select Type</option>
-                    <option value="image">Image</option>
-                    <option value="video">Video</option>
-                    <option value="pdf">PDF</option>
-                    <option value="doc">Document</option>
-                </select> -->
 
                 <!-- Department -->
                 <input v-model="form.department" placeholder="Department" />

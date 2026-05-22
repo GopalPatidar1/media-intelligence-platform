@@ -1,0 +1,93 @@
+.modal {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  color: black;
+  width: 500px;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.upload-box {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.upload-box:hover {
+  border-color: #007bff;
+}
+
+.hidden-input {
+  display: none;
+}
+
+.file-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.file-name {
+  font-weight: 500;
+}
+
+.file-size {
+  color: #666;
+}
+
+input,
+select {
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.cancel {
+  background: #ccc;
+}
+
+.submit {
+  background: #007bff;
+  color: white;
+}
+
+.close {
+  cursor: pointer;
+  font-size: 22px;
+}

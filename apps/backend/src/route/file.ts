@@ -14,11 +14,7 @@ const upload = multer();
 
 const router = express.Router();
 
-export const deleteFileByIdRoute = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const deleteFileByIdRoute = async (req: Request) => {
   const { id } = req.params!;
   return await deleteFileById(id as string);
 };
@@ -73,11 +69,13 @@ export const fetchFileStatsByTypeRoute = async (
   if (typeof where === 'string') {
     parseWhere = where ? JSON.parse(where) : {};
   }
+  let data;
   if (type) {
-    return await fetchFilesByType(req, type as string, parseWhere);
+    data = await fetchFilesByType(req, type as string, parseWhere);
   }
 
-  return await fetchFileStatsByType(req, res, next);
+  data = await fetchFileStatsByType(req, res, next);
+  return res.send(200).json(data);
 };
 
 export const uploadFileRoute = async (
@@ -111,7 +109,7 @@ export const uploadFileRoute = async (
   return await uploadFileService(files[0], payload, req);
 };
 
-router.get('/', fetchFileStatsByTypeRoute);
+router.get('/get', fetchFileStatsByTypeRoute);
 router.get('/:uid', fetchFileByUidRoute);
 router.post('/upload', upload.single('file'), uploadFileRoute);
 router.put('/:uid', updateFileByUidRoute);

@@ -1,0 +1,49 @@
+<div class="modal">
+  <div class="modal-content">
+    <!-- Header -->
+    <div class="modal-header">
+      <h2>Upload Asset</h2>
+      <span class="close" (click)="closeModal()">&times;</span>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      <!-- Upload Box -->
+      <div
+        class="upload-box"
+        (click)="triggerFile()"
+        (dragover)="onDragOver($event)"
+        (drop)="handleDrop($event)"
+      >
+        <input #fileInput type="file" class="hidden-input" (change)="handleFileChange($event)" />
+
+        <div *ngIf="!file">
+          <p>Click or drag file to upload</p>
+          <small>Max file size: 5MB</small>
+        </div>
+
+        <!-- File Info -->
+        <div *ngIf="file" class="file-info">
+          <span class="file-name">{{ file.name }}</span>
+          <span class="file-size">{{ formatSize(file.size) }}</span>
+        </div>
+      </div>
+
+      <!-- Inputs -->
+      <input [(ngModel)]="form.name" placeholder="Asset Name" />
+      <input [(ngModel)]="form.department" placeholder="Department" />
+
+      <select [(ngModel)]="form.status">
+        <option value="uploaded">Uploaded</option>
+        <option value="reviewed">Reviewed</option>
+        <option value="approved">Approved</option>
+      </select>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button class="btn cancel" (click)="closeModal()">Cancel</button>
+      <button class="btn submit" (click)="submit()">Upload</button>
+    </div>
+  </div>
+</div>

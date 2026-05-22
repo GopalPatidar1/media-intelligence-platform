@@ -11,7 +11,7 @@ export default [
   ...tseslint.configs.recommended,
 
   {
-    ignores: ['apps/nuxt-app/.nuxt', '.output', 'dist', 'node_modules'],
+    ignores: ['apps/nuxt-app/.nuxt', '.output', 'dist', 'node_modules','apps/angular/.angular'],
   },
 
   {

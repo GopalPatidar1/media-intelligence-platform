@@ -12,14 +12,10 @@ export const login = async (
   return await loginService(req, res, next);
 };
 
-export const logout = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const logout = async (req: Request, res: Response) => {
   res.clearCookie('authToken');
   res.clearCookie('authenticated');
-  return { success: true };
+  res.sendStatus(200);
 };
 
 export const register = async (

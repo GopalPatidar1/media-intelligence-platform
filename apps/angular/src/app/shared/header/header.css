@@ -1,0 +1,39 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  background: #1e293b;
+  color: white;
+  border-radius: 10px;
+}
+
+.left h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.user {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-top: 4px;
+}
+
+.right {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn {
+  background: #3b82f6;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+}
+
+.btn:hover {
+  background: #2563eb;
+}

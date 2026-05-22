@@ -19,7 +19,7 @@ export const fetchFileStatsByType = async (
   res: Response,
   next: NextFunction
 ) => {
-  return await getFileStatsByType(req);
+  return await getFileStatsByType(req, res, next);
 };
 
 export const fetchFileByUid = async (

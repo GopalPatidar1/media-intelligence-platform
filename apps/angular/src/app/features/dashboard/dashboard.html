@@ -1,3 +1,42 @@
-<div class="login-container">
-  <h2>Dashboard</h2>
+<!-- <app-header [firstName]="'Gopal'"></app-header> -->
+
+<div class="container">
+  <h3>Asset Overview Dashboard</h3>
+
+  <!-- Empty -->
+  <p *ngIf="!files.length && !loading">No assets available yet. Upload files to see them here.</p>
+
+  <!-- Table -->
+  <table class="table" *ngIf="files.length">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Total Assets</th>
+        <th>Size (KB)</th>
+        <th>Uploaded Date</th>
+        <th>Action Button</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let file of files">
+        <td>{{ capitalizeWords(file.fileType) }}</td>
+        <td>{{ file.count }}</td>
+        <td>{{ formatSize(file.size) }}</td>
+        <td>{{ formatDate(file.createdAt) }}</td>
+
+        <td>
+          <a [routerLink]="['/files', file.fileType]" class="viewBtn"> View Folder </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Loading -->
+  <p *ngIf="loading">Loading assets...</p>
+
+  <!-- Error -->
+  <p *ngIf="error" class="error">
+    {{ error }}
+  </p>
 </div>

@@ -10,7 +10,7 @@ export const authGuard: CanActivateFn = () => {
   try {
     const isLoggedIn = cookieService.check('authenticated');
     return isLoggedIn ? true : router.createUrlTree(['/login']);
-  } catch (error) {
+  } catch {
     return router.createUrlTree(['/login']);
   }
 };
