@@ -1,0 +1,17 @@
+<div *ngIf="isOpen" class="modal-overlay">
+  <div class="modal-box">
+    <h3 class="title">
+      {{ title }}
+    </h3>
+
+    <p class="message">
+      {{ message }}
+    </p>
+
+    <div class="actions">
+      <button class="cancel" (click)="cancel()">Cancel</button>
+
+      <button class="confirm" (click)="accept()">Confirm</button>
+    </div>
+  </div>
+</div>

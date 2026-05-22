@@ -6,12 +6,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal';
+
 import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-asset-overview',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmModalComponent],
   templateUrl: './file.html',
   styleUrls: ['./file.css'],
 })
@@ -22,6 +24,12 @@ export class AssetOverviewComponent implements OnInit {
   searchText = '';
   type = '';
   fileUpload: any = {};
+  isModalOpen = false;
+
+  modalTitle = '';
+  modalMessage = '';
+
+  private deleteUid = '';
 
   timeout: any;
 
@@ -79,17 +87,28 @@ export class AssetOverviewComponent implements OnInit {
     }
   }
 
-  async deleteFile(uid: string) {
-    const confirmed = confirm('Are you sure you want to delete this file?');
+  onCancel = () => {
+    this.isModalOpen = false;
+  };
 
-    if (!confirmed) return;
+  openDeleteModal(uid: string) {
+    this.deleteUid = uid;
+
+    this.modalTitle = 'Delete File';
+    this.modalMessage = 'Are you sure you want to delete this file?';
+
+    this.isModalOpen = true;
+  }
+
+  onAccept = async () => {
+    this.isModalOpen = false;
 
     try {
-      await this.http
-        .delete(`http://localhost:3002/api/file/${uid}`, {
+      await firstValueFrom(
+        this.http.delete(`http://localhost:3002/api/file/${this.deleteUid}`, {
           withCredentials: true,
-        })
-        .toPromise();
+        }),
+      );
 
       alert('File deleted successfully');
 
@@ -97,7 +116,7 @@ export class AssetOverviewComponent implements OnInit {
     } catch {
       alert('Failed to delete file');
     }
-  }
+  };
 
   viewFile(uid: string) {
     window.open(`http://localhost:3002/api/file/${uid}`, '_blank');
