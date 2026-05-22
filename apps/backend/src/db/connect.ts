@@ -23,7 +23,7 @@ export const connectDB = async () => {
   try {
     await config.sequelize.authenticate();
     initModels(config.sequelize);
-    await config.sequelize.sync({ alter: true });
+    // await config.sequelize.sync({ alter: true });
     const { bootstrapRabbit } = await import('../services/rabbitmq');
     await bootstrapRabbit();
     console.log('✅ PostgreSQL connected');

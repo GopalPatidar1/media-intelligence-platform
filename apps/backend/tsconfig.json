@@ -10,7 +10,8 @@
     "types": ["node"],
     "baseUrl": ".",
     "paths": {
-      "envObject": ["./src/config/index.ts"]
+      "envObject": ["./src/config/index.ts"],
+      "@/": ["./src/*"]
     }
   },
   "include": ["src/**/*"]

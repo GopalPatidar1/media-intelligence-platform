@@ -66,6 +66,20 @@ class Users extends Sequelize.Model {
         tableName: 'users',
         timestamps: true,
         paranoid: true,
+        indexes: [
+          {
+            name: 'PRIMARY',
+            unique: true,
+            using: 'BTREE',
+            fields: [{ name: 'uid' }],
+          },
+          {
+            name: 'email',
+            unique: true,
+            using: 'BTREE',
+            fields: [{ name: 'email' }],
+          },
+        ],
       }
     );
   }
