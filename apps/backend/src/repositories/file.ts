@@ -1,5 +1,5 @@
 import { Sequelize, Op } from 'sequelize';
-import { NextFunction, Request } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import createError from 'http-errors';
 import config from '../config';
 import { startSystem } from '../services/rabbitmq';
@@ -84,9 +84,17 @@ export const updateFileRecord = async (
   return file;
 };
 
-export const getFileStatsByType = async (req: Request) => {
+export const getFileStatsByType = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { Files } = config.sequelize.models;
-  if (!req.context || !req.context.user || !req.context.user.uid) return false;
+  if (!req.context || !req.context.user || !req.context.user.uid) {
+    return next(
+      createError(401, { statusCode: 401, statusMessage: 'Unauthorized' })
+    );
+  }
 
   return await Files.findAll({
     include: [

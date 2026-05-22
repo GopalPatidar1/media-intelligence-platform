@@ -3,6 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import authRoutes from './route/login';
 import fileRoutes from './route/file';
+import authGlobal from './middleware/auth.global';
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -19,7 +20,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use('/api/auth', authRoutes);
+
+app.use(authGlobal);
 app.use('/api/file', fileRoutes);
+
+app.use((err: any, req: express.Request, res: express.Response) => {
+  res.status(400).json({
+    message: 'Something went wrong',
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

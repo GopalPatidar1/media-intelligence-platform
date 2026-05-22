@@ -23,7 +23,10 @@ export default async (req: Request, res: Response, next: NextFunction) => {
       email: string;
     };
 
+    req.context = req.context || {};
+
     req.context.user = { uid: decoded.uid, email: decoded.email };
+    return next();
   } catch {
     return next(
       createHttpError(401, {

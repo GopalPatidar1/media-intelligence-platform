@@ -1,0 +1,15 @@
+<header class="header">
+  <div class="left">
+    <h2>Welcome to App 👋</h2>
+    <p class="user">Hello, {{ firstName }}</p>
+  </div>
+
+  <div class="right">
+    <button type="button" class="btn" (click)="openUpload()">Upload File</button>
+
+    <button type="button" class="btn" (click)="logoutUser()">Logout</button>
+  </div>
+</header>
+
+<!-- Upload Modal -->
+<file-upload-modal *ngIf="fileUpload" (close)="fileUpload = false"> </file-upload-modal>

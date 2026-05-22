@@ -1,4 +1,3 @@
-import config from 'config';
 import { connectDB } from './db/connect';
 
 let server;
