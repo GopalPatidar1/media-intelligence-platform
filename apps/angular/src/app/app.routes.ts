@@ -33,6 +33,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/dashboard/dashboard').then((m) => m.DashboardComponent),
       },
+      // Dynamic Route
+      {
+        path: 'files/:type',
+        loadComponent: () =>
+          import('./features/assetOverview/file').then((m) => m.AssetOverviewComponent),
+      },
+
       {
         path: '',
         redirectTo: 'dashboard',

@@ -75,7 +75,7 @@ export const fetchFileStatsByTypeRoute = async (
   }
 
   data = await fetchFileStatsByType(req, res, next);
-  return res.send(200).json(data);
+  return res.status(200).json(data);
 };
 
 export const uploadFileRoute = async (

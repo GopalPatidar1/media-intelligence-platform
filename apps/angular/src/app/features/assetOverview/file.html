@@ -1,0 +1,62 @@
+<div class="container">
+  <div class="header-container">
+    <button (click)="goBack()">Back to Dashboard</button>
+
+    <h3>{{ capitalizeWords(type) }} Asset Overview</h3>
+  </div>
+
+  <input
+    class="search-box"
+    [(ngModel)]="searchText"
+    (input)="onSearchChange()"
+    placeholder="Search Asset Overview"
+  />
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Size (KB)</th>
+        <th>Uploaded Date</th>
+        <th>Status</th>
+        <th>Action Button</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let file of files">
+        <td>
+          {{ capitalizeWords(file.fileName) }}
+        </td>
+
+        <td>
+          {{ formatSize(file.size) }}
+        </td>
+
+        <td>
+          {{ formatDate(file.createdAt) }}
+        </td>
+
+        <td>
+          {{ capitalizeWords(file.status) }}
+        </td>
+
+        <td>
+          <button class="view-btn" (click)="viewFile(file.uid)">View</button>
+
+          <button class="view-btn" (click)="updateFile(file)">Update</button>
+
+          <button class="view-btn" (click)="deleteFile(file.uid)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="loading">
+    {{ searchText ? 'Searching assets...' : 'Loading assets...' }}
+  </p>
+
+  <p *ngIf="error" class="error">
+    {{ error }}
+  </p>
+</div>

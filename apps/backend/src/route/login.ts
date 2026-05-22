@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { loginService } from '@/services/auth/login';
 import { registerService } from '@/services/auth/register';
+import createHttpError from 'http-errors';
 
 const router = express.Router();
 
@@ -12,10 +13,22 @@ export const login = async (
   return await loginService(req, res, next);
 };
 
-export const logout = async (req: Request, res: Response) => {
-  res.clearCookie('authToken');
-  res.clearCookie('authenticated');
-  res.sendStatus(200);
+export const logout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    res.clearCookie('authToken');
+    res.clearCookie('authenticated');
+    return res.status(200).json({
+      success: true,
+    });
+  } catch (error: any) {
+    return next(
+      createHttpError(500, { error: error?.message || 'Logout failed' })
+    );
+  }
 };
 
 export const register = async (
@@ -26,8 +39,8 @@ export const register = async (
   return await registerService(req, res, next);
 };
 
+router.get('/logout', logout);
 router.post('/login', login);
-router.post('/logout', logout);
 router.post('/register', register);
 
 export default router;
