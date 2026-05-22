@@ -6,8 +6,8 @@ import {
   fetchFilesByType,
   uploadFileService,
   updateFileByUid,
-} from '../services/file.service';
-import { FileForm } from '../types/file';
+} from '@/services/file.service';
+import { FileForm } from '@/types/file';
 import createHttpError from 'http-errors';
 import multer from 'multer';
 const upload = multer();

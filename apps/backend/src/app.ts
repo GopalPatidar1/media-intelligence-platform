@@ -1,9 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import authRoutes from './route/login';
-import fileRoutes from './route/file';
-import authGlobal from './middleware/auth.global';
+import authRoutes from '@/route/login';
+import fileRoutes from '@/route/file';
+import authGlobal from '@/middleware/auth';
 
 const app = express();
 const PORT = process.env.PORT || 3002;

@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
-import { loginService } from '../services/auth/login';
-import { registerService } from '../services/auth/register';
+import { loginService } from '@/services/auth/login';
+import { registerService } from '@/services/auth/register';
 
 const router = express.Router();
 

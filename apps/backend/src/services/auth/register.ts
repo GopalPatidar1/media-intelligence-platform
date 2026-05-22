@@ -1,8 +1,8 @@
-import config from '../../config/index';
+import config from '@/config/index';
 import jsonwebtoken from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { Response, NextFunction, Request } from 'express';
-import { fetchUserByEmail, createUser } from '../../repositories/user';
+import { fetchUserByEmail, createUser } from '@/repositories/user';
 
 const generateTokon = (
   res: Response,

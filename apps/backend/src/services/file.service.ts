@@ -1,5 +1,6 @@
-import { getMinioClient } from '../utils/minio';
-import { FILE_TYPE_MAP, MIME_MAP } from '../utils/constants';
+import createError from 'http-errors';
+import { getMinioClient } from '@/utils/minio';
+import { FILE_TYPE_MAP, MIME_MAP } from '@/utils/constants';
 import {
   createFileRecord,
   getFileStatsByType,
@@ -7,9 +8,8 @@ import {
   deleteFileByIdRepo,
   getFileByUid,
   updateFileRecord,
-} from '../repositories/file';
-import { FileForm } from '../types/file';
-import createError from 'http-errors';
+} from '@/repositories/file';
+import { FileForm } from '@/types/file';
 import { Request, Response, NextFunction } from 'express';
 
 const BUCKET = 'uploads';
