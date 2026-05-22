@@ -143,7 +143,7 @@ export const getFilesByType = async (
 };
 
 export const getFileByUid = async (req: Request) => {
-  const { id: uid } = req.params!;
+  const { uid } = req.params!;
   const { Files } = config.sequelize.models;
   if (!req.context || !req.context.user || !req.context.user.uid) return false;
 

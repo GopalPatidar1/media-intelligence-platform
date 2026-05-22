@@ -64,30 +64,26 @@ export const deleteFileById = async (id: string) => {
 };
 
 const validateFileType = async (file: any, payload: FileForm) => {
-  if (!file || !file.data) {
+  if (!file || !file.buffer) {
     throw createError({ statusCode: 400, statusMessage: 'Invalid file' });
   }
-  const fileType = FILE_TYPE_MAP[file.type];
+  const fileType = FILE_TYPE_MAP[file.mimetype];
   if (!fileType) {
     throw createError({ statusCode: 400, statusMessage: 'Invalid file type' });
   }
 
-  const fileName = `${fileType}/${file.filename}`;
+  const fileName = `${fileType}/${file.originalname}`;
   const path = `${BUCKET}/${fileName}`;
-  const size = file.data.byteLength;
+  const size = file.size;
 
-  if (!payload.fileName) payload.fileName = file.filename;
+  if (!payload.fileName) payload.fileName = file.originalname;
+
   try {
-    await getMinioClient().putObject(
-      BUCKET,
-      fileName,
-      file.data,
-      file.data.length,
-      {
-        'Content-Type': file.type || 'application/octet-stream',
-      }
-    );
-  } catch {
+    await getMinioClient().putObject(BUCKET, fileName, file.buffer, size, {
+      'Content-Type': file.mimetype || 'application/octet-stream',
+    });
+  } catch (err) {
+    console.log('Errpr', err);
     throw createError({ statusCode: 500, statusMessage: 'File upload failed' });
   }
 
@@ -95,30 +91,41 @@ const validateFileType = async (file: any, payload: FileForm) => {
 };
 
 export const uploadFileService = async (
-  file: any,
-  payload: FileForm,
-  req: Request
+  req: Request,
+  res: Response,
+  next: NextFunction,
+  payload: any
 ) => {
-  const { fileType, fileName, path, size } = await validateFileType(
-    file,
-    payload
-  );
+  const file = req.file;
+  try {
+    const { fileType, fileName, path, size } = await validateFileType(
+      file,
+      payload
+    );
+    console.log('🚀 ~ uploadFileService ~ fileName:', fileName);
 
-  if (!req.context || !req.context.user || !req.context.user.uid) return false;
+    if (!req.context || !req.context.user || !req.context.user.uid)
+      return false;
 
-  await createFileRecord({
-    userId: req.context.user.uid,
-    fileType,
-    fileUrl: path,
-    size,
-    ...payload,
-  });
+    console.log('🚀 ~ uploadFileService ~ payload:', payload);
+    await createFileRecord({
+      userId: req.context.user.uid,
+      fileType,
+      fileUrl: path,
+      size,
+      ...payload,
+    });
 
-  return {
-    statusMessage: 'Upload successful',
-    fileName,
-    url: `http://localhost:9001/${path}`,
-  };
+    res.status(200).json({
+      statusMessage: 'Upload successful',
+      fileName,
+      url: `http://localhost:9001/${path}`,
+    });
+  } catch (err: any) {
+    return next(
+      createError(400, { message: err.message || 'something went wrong' })
+    );
+  }
 };
 
 export const updateFileByUid = async (
