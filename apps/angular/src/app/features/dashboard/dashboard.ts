@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -30,7 +29,9 @@ export class DashboardComponent implements OnInit {
           withCredentials: true,
         })
         .toPromise();
-      this.files = response?.data || [];
+      this.files = [...(response || [])];
+
+      // this.files = [...response] || [];
     } catch {
       this.error = 'Failed to load assets';
     } finally {

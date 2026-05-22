@@ -1,0 +1,57 @@
+.container {
+  padding: 20px;
+}
+
+.header-container {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+}
+
+.header-container button {
+  border: none;
+  background-color: transparent;
+  color: #105ef0;
+  font-size: large;
+  cursor: pointer;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.table th {
+  background: #1e293b;
+  color: white;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+}
+
+.view-btn {
+  padding: 4px;
+  color: #105ef0;
+  text-decoration: underline;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.search-box {
+  padding: 5px;
+  border-color: #ddd;
+  border-radius: 5px;
+  border-width: 1px;
+  width: 250px;
+}
