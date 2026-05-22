@@ -80,6 +80,14 @@ class Files extends Sequelize.Model {
         tableName: 'files',
         timestamps: true,
         paranoid: true,
+        indexes: [
+          {
+            name: 'PRIMARY',
+            unique: true,
+            using: 'BTREE',
+            fields: [{ name: 'id' }],
+          },
+        ],
       }
     );
   }

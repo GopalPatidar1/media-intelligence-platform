@@ -94,6 +94,26 @@ class FileVersions extends Sequelize.Model {
         tableName: 'file_versions',
         timestamps: true,
         paranoid: true,
+        indexes: [
+          {
+            name: 'PRIMARY',
+            unique: true,
+            using: 'BTREE',
+            fields: [{ name: 'id' }],
+          },
+          {
+            name: 'userId',
+            unique: true,
+            using: 'BTREE',
+            fields: [{ name: 'user_id' }],
+          },
+          {
+            name: 'fileId',
+            unique: true,
+            using: 'BTREE',
+            fields: [{ name: 'file_id' }],
+          },
+        ],
       }
     );
   }
