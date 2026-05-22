@@ -1,6 +1,6 @@
-import config from '../config/index';
+import config from '@/config/index';
 import { Sequelize } from 'sequelize';
-import initModels from '../models/initModel';
+import initModels from '@/models/initModel';
 
 export const connectDB = async () => {
   if (!config.db || !config.db.name || !config.db.user || !config.db.password) {
@@ -24,7 +24,7 @@ export const connectDB = async () => {
     await config.sequelize.authenticate();
     initModels(config.sequelize);
     // await config.sequelize.sync({ alter: true });
-    const { bootstrapRabbit } = await import('../services/rabbitmq');
+    const { bootstrapRabbit } = await import('@/services/rabbitmq');
     await bootstrapRabbit();
     console.log('✅ PostgreSQL connected');
   } catch (error) {

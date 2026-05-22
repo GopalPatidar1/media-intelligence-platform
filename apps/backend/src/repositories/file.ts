@@ -1,8 +1,8 @@
 import { Sequelize, Op } from 'sequelize';
 import { NextFunction, Request, Response } from 'express';
 import createError from 'http-errors';
-import config from '../config';
-import { startSystem } from '../services/rabbitmq';
+import config from '@/config';
+import { startSystem } from '@/services/rabbitmq';
 
 export const createFileRecord = async (data: {
   userId: string;

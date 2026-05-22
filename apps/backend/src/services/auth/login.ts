@@ -1,8 +1,8 @@
-import config from '../../config/index';
+import config from '@/config/index';
 import jsonwebtoken from 'jsonwebtoken';
 import { NextFunction, Response, Request } from 'express';
 import bcrypt from 'bcryptjs';
-import { fetchUserByEmail } from '..//../repositories/user';
+import { fetchUserByEmail } from '@/repositories/user';
 import createHttpError from 'http-errors';
 
 export const loginService = async (
