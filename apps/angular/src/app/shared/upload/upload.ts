@@ -1,3 +1,4 @@
+import { firstValueFrom } from 'rxjs';
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -91,9 +92,17 @@ export class UploadModalComponent {
 
     try {
       if (this.data?.uid) {
-        await this.api.post(`/api/file/${this.data.uid}`, formData);
+        await firstValueFrom(
+          this.api.post(`http://localhost:3002/api/file/${this.data.uid}`, formData, {
+            withCredentials: true,
+          }),
+        );
       } else {
-        await this.api.post('/api/file/upload', formData);
+        await firstValueFrom(
+          this.api.post('http://localhost:3002/api/file/upload', formData, {
+            withCredentials: true,
+          }),
+        );
       }
 
       this.closeModal();

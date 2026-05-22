@@ -1,11 +1,12 @@
 // asset-overview.component.ts
 
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-asset-overview',
@@ -28,6 +29,7 @@ export class AssetOverviewComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private http: HttpClient,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -41,11 +43,11 @@ export class AssetOverviewComponent implements OnInit {
     try {
       this.loading = true;
 
-      const response: any = await this.http
-        .get(`http://localhost:3002/api/file/get?type=${this.type}&search=${search}`, {
+      const response: any = await firstValueFrom(
+        this.http.get(`http://localhost:3002/api/file/get?type=${this.type}&search=${search}`, {
           withCredentials: true,
-        })
-        .toPromise();
+        }),
+      );
       this.files = [...(response || [])];
 
       this.loading = false;
@@ -53,6 +55,7 @@ export class AssetOverviewComponent implements OnInit {
       this.error = 'Failed to load assets';
     } finally {
       this.loading = false;
+      this.cdr.detectChanges();
     }
   }
 

@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -14,7 +15,10 @@ export class DashboardComponent implements OnInit {
   loading = false;
   error = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
     this.fetchFiles();
@@ -23,19 +27,17 @@ export class DashboardComponent implements OnInit {
   async fetchFiles() {
     try {
       this.loading = true;
-
-      const response: any = await this.http
-        .get('http://localhost:3002/api/file/get', {
+      const response: any = await firstValueFrom(
+        this.http.get('http://localhost:3002/api/file/get', {
           withCredentials: true,
-        })
-        .toPromise();
+        }),
+      );
       this.files = [...(response || [])];
-
-      // this.files = [...response] || [];
     } catch {
       this.error = 'Failed to load assets';
     } finally {
       this.loading = false;
+      this.cdr.detectChanges();
     }
   }
 

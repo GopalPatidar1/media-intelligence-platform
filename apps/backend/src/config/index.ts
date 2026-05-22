@@ -5,6 +5,10 @@ export const config = {
 
   rabbitmqUser: process.env.RABBITMQ_USER,
   rabbitmqPass: process.env.RABBITMQ_PASS,
+  minioEndpoint: process.env.MINIO_ENDPOINT,
+  minioPort: process.env.MINIO_PORT,
+  minioRootUser: process.env.MINIO_ROOT_USER,
+  minioRootPassword: process.env.MINIO_ROOT_PASSWORD,
 
   db: {
     name: process.env.DB_NAME,
