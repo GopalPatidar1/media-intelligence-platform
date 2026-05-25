@@ -1,0 +1,15 @@
+@if (visible) {
+  <div class="overlay">
+    <div class="modal-box">
+      <div class="icon-container">⚠️</div>
+
+      <h2>Oops!</h2>
+
+      <p>
+        {{ message }}
+      </p>
+
+      <button (click)="closeModal()">Try Again</button>
+    </div>
+  </div>
+}

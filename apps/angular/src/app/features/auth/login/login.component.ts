@@ -17,7 +17,7 @@ export class LoginComponent {
   loginForm: FormGroup;
 
   loading = false;
-  error = '';
+  error: any = '';
 
   constructor(
     private fb: FormBuilder,
@@ -28,6 +28,12 @@ export class LoginComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
     });
+  }
+
+  ngOnInit(): void {
+    const data: any = undefined;
+
+    console.log(data.user2323.name);
   }
 
   async handleLogin() {
